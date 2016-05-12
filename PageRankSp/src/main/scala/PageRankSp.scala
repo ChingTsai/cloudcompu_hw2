@@ -21,8 +21,7 @@ object PageRankSp {
     val lines = sc.textFile(filePath, sc.defaultParallelism)
 
     val regex = "<title>(.+?)</title>".r;
-    val res = lines.map(line => {URLDecoder.decode(regex.findFirstIn(line).toString())});
-    
+    val res = lines.map(line => regex.findFirstIn(line).toString());
 
     res.sortBy(_.toString()).saveAsTextFile(outputPath)
 
