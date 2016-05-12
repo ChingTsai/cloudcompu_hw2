@@ -22,7 +22,7 @@ object PageRankSp {
     val lines = sc.textFile(filePath, sc.defaultParallelism)
 
     val regex = "<title>(.+?)</title>".r;
-    val res = lines.map(line => scala.xml.XML.loadString(line.toString()) \ "title");
+    val res = lines.map(line => (scala.xml.XML.loadString(line.toString()) \ "title").text);
 
     res.sortBy(_.toString()).saveAsTextFile(outputPath)
 
