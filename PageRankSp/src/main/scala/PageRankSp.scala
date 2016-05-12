@@ -25,7 +25,7 @@ object PageRankSp {
         (title ,regex.findAllMatchIn(line).mkString);
     });
 
-    res.sortBy(_.toString()).saveAsTextFile(outputPath)
+    res.sortBy(_._1.toString()).saveAsTextFile(outputPath)
 
     sc.stop
   }
