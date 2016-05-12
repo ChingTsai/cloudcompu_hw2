@@ -22,7 +22,8 @@ object PageRankSp {
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
     val res = lines.map(line => {
         val title = (scala.xml.XML.loadString(line.toString()) \ "title").text;
-        (title ,regex.findAllIn(line).subgroups.map { x => x.substring(2, x.length()-2) }.mkString);
+        val out = regex.findAllIn(line).subgroups.mkString(",");
+        (title ,out);
     });
 
     res.sortBy(_._1.toString()).saveAsTextFile(outputPath)
