@@ -1,0 +1,15 @@
+[0m[[0minfo[0m] [0mPackaging /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/page-rank-spark_2.10-1.0.jar ...[0m
+[0m[[0mdebug[0m] [0mInput file mappings:[0m
+[0m[[0mdebug[0m] [0m	PageRankSp.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/classes/PageRankSp.class[0m
+[0m[[0mdebug[0m] [0m	PageRankSp$$anonfun$main$1$$anonfun$2.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/classes/PageRankSp$$anonfun$main$1$$anonfun$2.class[0m
+[0m[[0mdebug[0m] [0m	PageRankSp$$anonfun$main$1.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/classes/PageRankSp$$anonfun$main$1.class[0m
+[0m[[0mdebug[0m] [0m	PageRankSp$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/classes/PageRankSp$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	PageRankSp$.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/classes/PageRankSp$.class[0m
+[0m[[0mdebug[0m] [0m	PageRankSp$$anonfun$3.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/SISQUAKE/workspace/CloudCompu/cloudcompu_hw2/PageRankSp/target/scala-2.10/classes/PageRankSp$$anonfun$3.class[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
