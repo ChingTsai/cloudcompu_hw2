@@ -1,6 +1,7 @@
-import org.apache.spark._
-import org.apache.hadoop.fs._
-import java.net.URLDecoder
+import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.fs.Path
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
 
 object PageRankSp {
   def main(args: Array[String]) {
@@ -21,7 +22,7 @@ object PageRankSp {
     val lines = sc.textFile(filePath, sc.defaultParallelism)
 
     val regex = "<title>(.+?)</title>".r;
-    val res = lines.map(line => regex.findFirstIn(line).toString());
+    val res = lines.map(line => scala.xml.XML.loadString(line.toString()) \ "title");
 
     res.sortBy(_.toString()).saveAsTextFile(outputPath)
 
