@@ -17,12 +17,13 @@ object PageRankSp {
     var hdfs = FileSystem.get(hadoopConf)
     try { hdfs.delete(new Path(outputPath), true) } catch { case _: Throwable => {} }
 
-    // Read input file
-
     val lines = sc.textFile(filePath, sc.defaultParallelism)
 
-    val regex = "<title>(.+?)</title>".r;
-    val res = lines.map(line => (scala.xml.XML.loadString(line.toString()) \ "title").text);
+    val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
+    val res = lines.map(line => {
+        val title = (scala.xml.XML.loadString(line.toString()) \ "title").text;
+        (title ,regex.findAllMatchIn(line));
+    });
 
     res.sortBy(_.toString()).saveAsTextFile(outputPath)
 
