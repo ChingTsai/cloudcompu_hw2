@@ -1,5 +1,6 @@
 import org.apache.spark._
 import org.apache.hadoop.fs._
+import java.net.URLDecoder
 
 object PageRankSp {
   def main(args: Array[String]) {
@@ -16,12 +17,12 @@ object PageRankSp {
     try { hdfs.delete(new Path(outputPath), true) } catch { case _: Throwable => {} }
 
     // Read input file
-    
-    val lines = sc.textFile(filePath, sc.defaultParallelism)
-    
-    val regex = "<title>(.+?)</title>".r;
-    val res = lines.map(x => regex.findFirstIn(x) );
 
+    val lines = sc.textFile(filePath, sc.defaultParallelism)
+
+    val regex = "<title>(.+?)</title>".r;
+    var res = lines.map(line => URLDecoder.decode(regex.findFirstIn(line).toString()));
+    res = res.map(x => URLDecoder.decode(x));
 
     res.sortBy(_.toString()).saveAsTextFile(outputPath)
 
