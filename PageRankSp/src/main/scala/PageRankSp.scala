@@ -26,7 +26,7 @@ object PageRankSp {
         
         val out = regex.findAllIn(line).toList.map { x => x.replaceAll("[\\[\\]]","").split("[\\|#]").head };
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
-        (title , out);
+        (title.capitalize , out);
     });
     
 
@@ -36,9 +36,14 @@ object PageRankSp {
     link = link.map(l => {
       (l._1,l._2.filter { x => bclinkMap.value.contains(x) })
     })
-    val res = link.map(x => (x._1,x._2.mkString(",")));
     
-    res.sortBy(_._1.toString()).saveAsTextFile(outputPath)
+    val res = link.map(x => (x._1,":"+x._2.mkString(",")));
+    //res.map(x => x._2.count)
+    val out_number = link.map(x => x._2.length).filter { _ ==0 }.count();
+    System.out.println("Out target"+out_number);
+    //res.saveAsTextFile(outputPath);
+    res.sortBy(_._1.toString()).saveAsTextFile(outputPath);
+    
 
     sc.stop
   }
