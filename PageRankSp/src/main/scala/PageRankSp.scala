@@ -50,24 +50,23 @@ object PageRankSp {
     var Err = 1.0;
     var iter = 0;
     while (Err > 0.001) {
-      
+
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       val tmpPR = rddPR.map(row => {
 
         row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) } ++ Array((row._1, 1.0 / n * (1 - alpha) + dangpr));
 
       }).flatMap(y => y).reduceByKey(_ + _);
-      Err = (tmpPR.join(rddPR.map(x => (x._1,x._2._2)))).map(x => (x._2._1 -  x._2._2).abs).reduce(_+_);
+      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)))).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
       rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR);
-      System.out.println("Iteration : "+iter + " err: " +Err);
-      iter = iter +1;
+      System.out.println("Iteration : " + iter + " err: " + Err);
+      iter = iter + 1;
     }
     rddPR.cache();
 
-    
     //res.saveAsTextFile(outputPath);
     val res = rddPR.map(x => (x._1, x._2._2));
-    res.sortBy({ case(page,pr) => (-pr,page) } , true, sc.defaultParallelism*3).saveAsTextFile(outputPath);
+    res.sortBy({ case (page, pr) => (-pr, page) }, true, sc.defaultParallelism * 3).map(x => x._1 + "\t" + x._2).saveAsTextFile(outputPath);
 
     sc.stop
   }
