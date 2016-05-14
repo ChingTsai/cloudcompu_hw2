@@ -48,7 +48,7 @@ object PageRankSp {
     var rddPR = link.map(x => (x._1, (x._2.toArray, 1.0 / n)));
     var presum = 1.0;
     var Err = 1.0;
-
+    var iter = 0;
     while (Err > 0.001) {
       
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
@@ -59,11 +59,12 @@ object PageRankSp {
       }).flatMap(y => y).reduceByKey(_ + _);
       Err = (tmpPR.join(rddPR.map(x => (x._1,x._2._2)))).map(x => (x._2._1 -  x._2._2).abs).reduce(_+_);
       rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR);
-      
+      System.out.println("Iteration : "+iter + " err: " +Err);
+      iter = iter +1;
     }
     rddPR.cache();
 
-    //.out.println("Out target"+out_number);
+    
     //res.saveAsTextFile(outputPath);
     val res = rddPR.map(x => (x._1, x._2._2));
     res.sortBy(x => (x._2,x._1), false, sc.defaultParallelism*3).saveAsTextFile(outputPath);
