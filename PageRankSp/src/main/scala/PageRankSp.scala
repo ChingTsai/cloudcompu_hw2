@@ -27,7 +27,9 @@ object PageRankSp {
         val lineXml = scala.xml.XML.loadString(line.toString())
         val title = (lineXml \ "title").text;
 
-        val out = regex.findAllIn(lineXml.text ).toList.map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]").head };
+        val out = regex.findAllIn(lineXml.text).toList
+        .map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]") }
+        .filter { _.length > 0 }.map(_.head);
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
         (title.capitalize, out);
       });
