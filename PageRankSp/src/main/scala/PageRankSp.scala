@@ -19,7 +19,6 @@ object PageRankSp {
 
     val lines = sc.textFile(filePath, sc.defaultParallelism*10)
     lines.cache();
-    val a = new StringContext("f");
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
     var link =
@@ -29,7 +28,7 @@ object PageRankSp {
 
         val out = regex.findAllIn(lineXml.text).toList
         .map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]") }
-        .filter { _.length > 0 }.map(_.head);
+        .filter { _.length > 0 }.map(_.head.capitalize);
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
         (title.capitalize, out);
       });
