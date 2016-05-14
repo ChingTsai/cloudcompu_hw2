@@ -21,6 +21,9 @@ object PageRankSp {
     lines.cache();
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
+    
+    var st = System.nanoTime
+
     var link =
       lines.map(line => {
         val lineXml = scala.xml.XML.loadString(line.toString())
@@ -32,6 +35,9 @@ object PageRankSp {
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
         (title.capitalize, out);
       });
+    
+     var micros = (System.nanoTime - st) / 1000
+     println("Parse :  %d microseconds".format(micros))
 
     val linkMap = (link.map(x => x._1)).toArray().toSet;
 
@@ -58,7 +64,8 @@ object PageRankSp {
     var tmpPR = rddPR.map(x => (x._1,x._2._2));
     
     while (Err > 0.001) {
-
+      st = System.nanoTime
+      
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       tmpPR = rddPR.map(row => {
 
@@ -67,7 +74,10 @@ object PageRankSp {
       }).flatMap(y => y).reduceByKey(_ + _);
       Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)))).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
       rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism*10);
+      
+      micros = (System.nanoTime - st) / 1000
       System.out.println("Iteration : " + iter + " err: " + Err);
+      println("Parse :  %d microseconds".format(micros))
       iter = iter + 1;
     }
 
