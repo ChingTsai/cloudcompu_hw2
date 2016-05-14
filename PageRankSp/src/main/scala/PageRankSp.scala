@@ -49,7 +49,7 @@ object PageRankSp {
     var presum = 1.0;
     var Err = 1.0;
     var iter = 0;
-    while (Err > 0.001) {
+    while (Err > 0.0005) {
 
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       val tmpPR = rddPR.map(row => {
