@@ -66,7 +66,7 @@ object PageRankSp {
     //.out.println("Out target"+out_number);
     //res.saveAsTextFile(outputPath);
     val res = rddPR.map(x => (x._1, x._2._2));
-    res.sortBy(_._2).saveAsTextFile(outputPath);
+    res.sortBy(x => (x._2,x._1), false, sc.defaultParallelism*3).saveAsTextFile(outputPath);
 
     sc.stop
   }
