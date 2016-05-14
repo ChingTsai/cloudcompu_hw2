@@ -18,32 +18,50 @@ object PageRankSp {
     try { hdfs.delete(new Path(outputPath), true) } catch { case _: Throwable => {} }
 
     val lines = sc.textFile(filePath, sc.defaultParallelism)
+    lines.cache();
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
     var link =
-        lines.map(line => {
+      lines.map(line => {
         val title = (scala.xml.XML.loadString(line.toString()) \ "title").text;
-        
-        val out = regex.findAllIn(line).toList.map { x => x.replaceAll("[\\[\\]]","").split("[\\|#]").head };
+
+        val out = regex.findAllIn(line).toList.map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]").head };
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
-        (title.capitalize , out);
-    });
-    
+        (title.capitalize, out);
+      });
 
     val linkMap = (link.map(x => x._1)).toArray().toSet;
-   
+
     val bclinkMap = sc.broadcast(linkMap);
     link = link.map(l => {
-      (l._1,l._2.filter { x => bclinkMap.value.contains(x) })
+      (l._1, l._2.filter { x => bclinkMap.value.contains(x) })
     })
-    
-    val res = link.map(x => (x._1,":"+x._2.mkString(",")));
+
+    link.cache();
+
+    val m = link.map(x => x._2.length).filter { _ == 0 }.count();
+    val n = bclinkMap.value.size;
+    val alpha = 0.85;
+
+    //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
-    val out_number = link.map(x => x._2.length).filter { _ ==0 }.count();
-    System.out.println("Out target"+out_number);
+    var rddPR = link.map(x => (x._1, (x._2.toArray, 1.0 / n)));
+
+    var i = 0;
+    for (i <- 1 to 5) {
+      //var preErr = rddPR.map(_._2._2).reduce(_ + _);
+      val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n;
+      val tmpPR = rddPR.map(row => {
+
+        row._2._1.map { tp => (tp, 1.0 / n * (1 - alpha) + alpha * (row._2._2 / row._2._1.length + dangpr)) }
+      }).flatMap(y => y).reduceByKey(_ + _);
+      rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR);
+    }
+    rddPR.cache();
+    //.out.println("Out target"+out_number);
     //res.saveAsTextFile(outputPath);
+    val res = rddPR.map(x => (x._1, x._2._2));
     res.sortBy(_._1.toString()).saveAsTextFile(outputPath);
-    
 
     sc.stop
   }
