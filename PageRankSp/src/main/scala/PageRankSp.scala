@@ -50,8 +50,8 @@ object PageRankSp {
     val n = bclinkMap.value.size;
     val alpha = 0.85;
 
-    var micros = (System.nanoTime - st) / 1000000000
-    println("Parse :  %1.2f seconds".format(micros))
+    var micros = (System.nanoTime - st) / 1000000000.0
+    System.out.println("Parse :  %1.2f seconds".format(micros))
 
     //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
@@ -75,9 +75,9 @@ object PageRankSp {
       Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)))).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
       rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism * 10);
 
-      micros = (System.nanoTime - st) / 1000000000
+      micros = (System.nanoTime - st) / 1000000000.0
       System.out.println("Iteration : " + iter + " err: " + Err);
-      println("Compute :  %1.2f seconds".format(micros))
+      System.out.println("Compute :  %1.2f seconds".format(micros))
       iter = iter + 1;
     }
 
