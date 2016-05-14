@@ -51,7 +51,7 @@ object PageRankSp {
     val alpha = 0.85;
 
     var micros = (System.nanoTime - st) / 1000000000
-    println("Parse :  %f seconds".format(micros))
+    println("Parse :  %1.2f seconds".format(micros))
 
     //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
@@ -77,7 +77,7 @@ object PageRankSp {
 
       micros = (System.nanoTime - st) / 1000000000
       System.out.println("Iteration : " + iter + " err: " + Err);
-      println("Compute :  %f seconds".format(micros))
+      println("Compute :  %1.2f seconds".format(micros))
       iter = iter + 1;
     }
 
