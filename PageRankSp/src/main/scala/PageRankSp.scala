@@ -46,22 +46,27 @@ object PageRankSp {
     //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
     var rddPR = link.map(x => (x._1, (x._2.toArray, 1.0 / n)));
+    var presum = 1.0;
+    var Err = 1.0;
 
-    var i = 0;
-    for (i <- 1 to 5) {
-      //var preErr = rddPR.map(_._2._2).reduce(_ + _);
-      val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n;
+    while (Err > 0.001) {
+      
+      val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       val tmpPR = rddPR.map(row => {
 
-        row._2._1.map { tp => (tp, 1.0 / n * (1 - alpha) + alpha * (row._2._2 / row._2._1.length + dangpr)) }
+        row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) } ++ Array((row._1, 1.0 / n * (1 - alpha) + dangpr));
+
       }).flatMap(y => y).reduceByKey(_ + _);
+      Err = (tmpPR.join(rddPR.map(x => (x._1,x._2._2)))).map(x => (x._2._1 -  x._2._2).abs).reduce(_+_);
       rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR);
+      
     }
     rddPR.cache();
+
     //.out.println("Out target"+out_number);
     //res.saveAsTextFile(outputPath);
     val res = rddPR.map(x => (x._1, x._2._2));
-    res.sortBy(_._1.toString()).saveAsTextFile(outputPath);
+    res.sortBy(_._2).saveAsTextFile(outputPath);
 
     sc.stop
   }
