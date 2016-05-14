@@ -19,13 +19,15 @@ object PageRankSp {
 
     val lines = sc.textFile(filePath, sc.defaultParallelism)
     lines.cache();
+    val a = new StringContext("f");
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
     var link =
       lines.map(line => {
-        val title = (scala.xml.XML.loadString(line.toString()) \ "title").text;
+        val lineXml = scala.xml.XML.loadString(line.toString())
+        val title = (lineXml \ "title").text;
 
-        val out = regex.findAllIn(line).toList.map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]").head };
+        val out = regex.findAllIn(lineXml.text ).toList.map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]").head };
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
         (title.capitalize, out);
       });
@@ -33,6 +35,7 @@ object PageRankSp {
     val linkMap = (link.map(x => x._1)).toArray().toSet;
 
     val bclinkMap = sc.broadcast(linkMap);
+    //remove missing link
     link = link.map(l => {
       (l._1, l._2.filter { x => bclinkMap.value.contains(x) })
     })
@@ -46,10 +49,10 @@ object PageRankSp {
     //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
     var rddPR = link.map(x => (x._1, (x._2.toArray, 1.0 / n)));
-    var presum = 1.0;
+
     var Err = 1.0;
     var iter = 0;
-    while (Err > 0.0005) {
+    while (Err > 0.001) {
 
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       val tmpPR = rddPR.map(row => {
