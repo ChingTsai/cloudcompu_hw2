@@ -24,7 +24,7 @@ public class StringArrayWritable extends ArrayWritable {
 	}
 
 	public StringArrayWritable(Text[] texts) {
-		super(LongWritable.class);
+		super(Text.class);
 		set(texts);
 	}
 
