@@ -100,7 +100,7 @@ public class PageRankMr {
 		job4.setJarByClass(PageRankMr.class);
 		job4.setInputFormatClass(KeyValueTextInputFormat.class);
 		job4.setMapOutputKeyClass(Text.class);
-		job4.setMapOutputValueClass(StringArrayWritable.class);
+		job4.setMapOutputValueClass(Text.class);
 		job4.setOutputKeyClass(Text.class);
 		job4.setOutputValueClass(Text.class);
 		job4.setNumReduceTasks(50);
