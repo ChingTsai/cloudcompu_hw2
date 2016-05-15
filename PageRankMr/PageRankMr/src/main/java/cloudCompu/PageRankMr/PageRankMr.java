@@ -3,6 +3,7 @@ package cloudCompu.PageRankMr;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -52,7 +53,7 @@ public class PageRankMr {
 		job2.setMapOutputKeyClass(Text.class);
 		job2.setMapOutputValueClass(Text.class);
 		job2.setOutputKeyClass(Text.class);
-		job2.setOutputValueClass(StringArrayWritable.class);
+		job2.setOutputValueClass(Text.class);
 		job2.setNumReduceTasks(50);
 		// setthe class of each stage in mapreduce
 		job2.setMapperClass(PruneMapper.class);
@@ -69,9 +70,9 @@ public class PageRankMr {
 		job3.setJarByClass(PageRankMr.class);
 		job3.setInputFormatClass(KeyValueTextInputFormat.class);
 		job3.setMapOutputKeyClass(Text.class);
-		job3.setMapOutputValueClass(Text.class);
+		job3.setMapOutputValueClass(DoubleWritable.class);
 		job3.setOutputKeyClass(Text.class);
-		job3.setOutputValueClass(Text.class);
+		job3.setOutputValueClass(DoubleWritable.class);
 		job3.setNumReduceTasks(1);
 		// setthe class of each stage in mapreduce
 		job3.setMapperClass(CompuDanglMapper.class);

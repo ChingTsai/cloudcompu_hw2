@@ -6,25 +6,26 @@ import java.util.ArrayList;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class PruneReduce extends Reducer<Text, Text, Text, StringArrayWritable> {
+public class PruneReduce extends Reducer<Text, Text, Text, Text> {
 	private Text title = new Text();
-	private StringArrayWritable links = new StringArrayWritable();
+	private Text links = new Text();
 
 	public void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 
-		ArrayList<Text> link = new ArrayList<Text>();
+		// ArrayList<Text> link = new ArrayList<Text>();
 		StringBuilder sb = new StringBuilder();
 		long N = context.getConfiguration().getLong("N", 1);
 		for (Text val : values) {
 			if (!val.toString().equals("&gt"))
-				link.add(val);
-			// sb.append(", " + val);
+				sb.append(" " + val);
+			// link.add(val);
+			//
 		}
 
 		title.set(key);
-		links.setPr((1d / N));
-		links.set((Text[]) link.toArray(new Text[link.size()]));
+
+		links.set(String.valueOf(1d / N) + " " + sb.toString());
 		context.write(title, links);
 
 	}
