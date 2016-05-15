@@ -42,7 +42,7 @@ public class ParseMapper extends Mapper<LongWritable, Text, Text, Text> {
 				context.write(link, title);
 			}
 		}
-		link.set("&gt");
+		link.set("&gt;");
 		context.write(title, link);
 
 	}

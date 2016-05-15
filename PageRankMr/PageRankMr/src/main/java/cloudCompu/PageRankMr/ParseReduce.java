@@ -17,7 +17,7 @@ public class ParseReduce extends Reducer<Text, Text, Text, Text> {
 
 		boolean miss = true;
 		for (Text val : values) {
-			if (val.toString().equals("&gt")) {
+			if (val.toString().equals("&gt;")) {
 				miss = false;
 			} else {
 				// sb.append(" ,"+val);
@@ -31,7 +31,7 @@ public class ParseReduce extends Reducer<Text, Text, Text, Text> {
 				context.write(title, link);
 			}
 			title.set(key);
-			link.set("&gt");
+			link.set("&gt;");
 			context.write(title, link);
 		}
 

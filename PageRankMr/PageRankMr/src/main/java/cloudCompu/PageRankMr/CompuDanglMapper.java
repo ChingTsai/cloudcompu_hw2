@@ -13,11 +13,11 @@ public class CompuDanglMapper extends Mapper<Text, Text, Text, DoubleWritable> {
 	public void map(Text key, Text value, Context context) throws IOException,
 			InterruptedException {
 
-		String[] links = value.toString().split(" ");
-
-		if (links.length == 2) {
+		String[] detial = value.toString().split("&gt;");
+		String[] par = detial[0].split(" ");
+		if (Integer.parseInt(par[2]) == 0) {
 			title.set("Dangle");
-			pr.set(Double.parseDouble(links[0]));
+			pr.set(Double.parseDouble(par[0]));
 			context.write(title, pr);
 		}
 

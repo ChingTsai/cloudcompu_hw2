@@ -16,16 +16,18 @@ public class PruneReduce extends Reducer<Text, Text, Text, Text> {
 		// ArrayList<Text> link = new ArrayList<Text>();
 		StringBuilder sb = new StringBuilder();
 		long N = context.getConfiguration().getLong("N", 1);
+		int len = 0;
 		for (Text val : values) {
-			if (!val.toString().equals("&gt"))
-				sb.append(" " + val);
-			// link.add(val);
-			//
+			if (!val.toString().equals("&gt;")) {
+				sb.append("&lt;" + val);
+				len++;
+			}
+
 		}
 
 		title.set(key);
 
-		links.set(String.valueOf(1d / N ) + " 1 " + sb.toString());
+		links.set(String.valueOf(1d / N) + " 1 " + len + "&gt;" + sb.toString());
 		context.write(title, links);
 
 	}
