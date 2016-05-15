@@ -19,7 +19,7 @@ public class PruneReduce extends Reducer<Text, Text, Text, Text> {
 		int len = 0;
 		for (Text val : values) {
 			if (!val.toString().equals("&gt;")) {
-				sb.append("&lt;" + val);
+				sb.append(val+"&lt;" );
 				len++;
 			}
 
