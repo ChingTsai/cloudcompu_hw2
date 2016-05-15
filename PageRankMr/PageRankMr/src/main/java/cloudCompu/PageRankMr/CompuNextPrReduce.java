@@ -21,9 +21,9 @@ public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 		String prepr = null;
 		double outpr = 0.0d;
 		String[] detial;
-		String[] par;
+		String[] par = null;
 		int len = 0;
-		String[] links;
+		
 		for (Text val : values) {
 			detial = val.toString().split("&gt;");
 			par = detial[0].split(" ");
@@ -40,7 +40,7 @@ public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 				outpr += Double.parseDouble(par[0]);
 			}
 		}
-		sb.insert(0, String.valueOf(len));
+		sb.insert(0, par[2]);
 		sb.insert(0, " ");
 		sb.insert(0, String.valueOf(pr + outpr / N));
 		sb.insert(0, " ");
