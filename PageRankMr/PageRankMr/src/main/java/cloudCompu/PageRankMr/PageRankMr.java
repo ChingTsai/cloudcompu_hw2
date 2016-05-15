@@ -118,26 +118,26 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job4, new Path("Hw2/pr"));
 		FileOutputFormat.setOutputPath(job4, new Path("Hw2/tmp"));
 		job4.waitForCompletion(true);
-		/*
+
 		fs.delete(new Path("Hw2/pr"), true);
 
 		Job job5 = Job.getInstance(conf, "PageRankMr-CompuErr");
 		job5.setJarByClass(PageRankMr.class);
 		job5.setInputFormatClass(KeyValueTextInputFormat.class);
 		job5.setMapOutputKeyClass(Text.class);
-		job5.setMapOutputValueClass(Text.class);
+		job5.setMapOutputValueClass(DoubleWritable.class);
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		job5.setNumReduceTasks(1);
 		// setthe class of each stage in mapreduce
-		//job5.setCombinerClass(CompuCombi.class);
+		job5.setCombinerClass(CompuCombi.class);
 		job5.setMapperClass(CompuErrMapper.class);
 		job5.setReducerClass(CompuErrReduce.class);
 
 		FileInputFormat.addInputPath(job5, new Path("Hw2/tmp"));
 		FileOutputFormat.setOutputPath(job5, new Path("Hw2/pr"));
 		job5.waitForCompletion(true);
-*/
+
 		System.exit(1);
 
 	}
