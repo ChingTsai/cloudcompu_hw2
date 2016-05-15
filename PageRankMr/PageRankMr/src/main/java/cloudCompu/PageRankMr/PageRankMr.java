@@ -125,7 +125,7 @@ public class PageRankMr {
 		job5.setJarByClass(PageRankMr.class);
 		job5.setInputFormatClass(KeyValueTextInputFormat.class);
 		job5.setMapOutputKeyClass(Text.class);
-		job5.setMapOutputValueClass(Text.class);
+		job5.setMapOutputValueClass(DoubleWritable.class);
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
 		job5.setNumReduceTasks(50);
