@@ -15,13 +15,13 @@ public class CompuNextPrMapper extends Mapper<Text, Text, Text, Text> {
 		String[] detial = value.toString().split("&gt;");
 		String[] par = detial[0].split(" ");
 		int len = Integer.parseInt(par[2]);
-		String[] links = detial[1].split("&lt;");
+		String[] links;
 		double prepr = Double.parseDouble(par[0]);
 		double dangl = context.getConfiguration().getDouble("dangl", 1);
 		double alpha = context.getConfiguration().getDouble("alpha", 0.85);
 		Long N = context.getConfiguration().getLong("N", 1);
 		if (len > 0) {
-
+			links = detial[1].split("&lt;");
 			for (int i = 0; i < len; i++) {
 				title.set(links[i]);
 				pr.set(String.valueOf(prepr / len) + " 0 -1");

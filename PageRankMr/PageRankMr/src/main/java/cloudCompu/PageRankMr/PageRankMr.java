@@ -50,7 +50,7 @@ public class PageRankMr {
 						"MAP_INPUT_RECORDS").getValue();
 		System.out.println("N:" + N);
 		conf.setLong("N", N);
-		job1.killJob();
+		
 		
 		Job job2 = Job.getInstance(conf, "PageRankMr-Parse");
 		job2.setJarByClass(PageRankMr.class);
@@ -79,6 +79,7 @@ public class PageRankMr {
 		job3.setMapOutputValueClass(DoubleWritable.class);
 		job3.setOutputKeyClass(Text.class);
 		job3.setOutputValueClass(Text.class);
+		job3.setCombinerClass(CompuCombi.class);
 		job3.setNumReduceTasks(1);
 		// setthe class of each stage in mapreduce
 		job3.setMapperClass(CompuDanglMapper.class);
