@@ -86,7 +86,7 @@ public class PageRankMr {
 		job3.waitForCompletion(true);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
-				fs.open(new Path("Hw2/tmp"))));
+				fs.open(new Path("Hw2/tmp/part-r-00000"))));
 		String[] dangl;
 		dangl = br.readLine().split("/t");
 		conf.setDouble("dangl", Double.parseDouble(dangl[1]));
