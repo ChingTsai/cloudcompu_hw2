@@ -1,37 +1,29 @@
 package cloudCompu.PageRankMr;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class PageRankMr {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 
-		Job job = Job.getInstance(conf, "PageRankMr");
-		job.setJarByClass(PageRankMr.class);
-		// set input format
+		Job job1 = Job.getInstance(conf, "PageRankMr-Parse");
+		job1.setJarByClass(PageRankMr.class);
 
-		// job.setInputFormatClass(KeyValueTextInputFormat.class);
-		/*
-		 * Test String : 1,AG 3,BB TextInputFormat: (0,AG) (16,BB)
-		 * KeyValueTextInputFormat: (1,AG) (3,BB) Can be config with
-		 * mapreduce.input.keyvaluelinerecordreader.key.value.separato
-		 */
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(StringArrayWritable.class);
+		job1.setMapOutputKeyClass(Text.class);
+		job1.setMapOutputValueClass(Text.class);
+		job1.setOutputKeyClass(Text.class);
+		job1.setOutputValueClass(Text.class);
 		// set the number of reducer
-		job.setNumReduceTasks(50);
+		job1.setNumReduceTasks(50);
 		// setthe class of each stage in mapreduce
-		job.setMapperClass(ParseMapper.class);
-		job.setReducerClass(ParseReduce.class);
+		job1.setMapperClass(ParseMapper.class);
+		job1.setReducerClass(ParseReduce.class);
 
 		// job.setMapperClass(xxx.class);
 		// job.setPartitionerClass(xxx.class);
@@ -41,9 +33,26 @@ public class PageRankMr {
 		// set the output class of Mapper and Reducer
 
 		// add input/output path
-		FileInputFormat.addInputPath(job, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		FileInputFormat.addInputPath(job1, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job1, new Path("Hw2/tmp"));
+		job1.waitForCompletion(true);
 
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
+		Job job2 = Job.getInstance(conf, "PageRankMr-Parse");
+		job2.setJarByClass(PageRankMr.class);
+		job2.setInputFormatClass(KeyValueTextInputFormat.class);
+		job2.setMapOutputKeyClass(Text.class);
+		job2.setMapOutputValueClass(Text.class);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(Text.class);
+		job2.setNumReduceTasks(50);
+		// setthe class of each stage in mapreduce
+		job2.setMapperClass(PruneMapper.class);
+		job2.setReducerClass(PruneReduce.class);
+
+		FileInputFormat.addInputPath(job1, new Path("Hw2/tmp"));
+		FileOutputFormat.setOutputPath(job1, new Path(args[1]));
+
+		System.exit(job2.waitForCompletion(true) ? 0 : 1);
+
 	}
 }
