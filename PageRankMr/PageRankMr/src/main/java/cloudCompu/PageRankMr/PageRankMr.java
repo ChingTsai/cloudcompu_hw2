@@ -1,6 +1,7 @@
 package cloudCompu.PageRankMr;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -11,6 +12,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class PageRankMr {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
+		conf.setDouble("alpha", 0.85d);
 
 		Job job1 = Job.getInstance(conf, "PageRankMr-Parse");
 		job1.setJarByClass(PageRankMr.class);
@@ -37,28 +39,49 @@ public class PageRankMr {
 		FileOutputFormat.setOutputPath(job1, new Path("Hw2/tmp"));
 		job1.waitForCompletion(true);
 
+		long N = job1
+				.getCounters()
+				.findCounter("org.apache.hadoop.mapred.Task$Counter",
+						"MAP_INPUT_RECORDS").getValue();
+		System.out.println("N:" + N);
+		conf.setLong("N", N);
+
 		Job job2 = Job.getInstance(conf, "PageRankMr-Parse");
 		job2.setJarByClass(PageRankMr.class);
 		job2.setInputFormatClass(KeyValueTextInputFormat.class);
 		job2.setMapOutputKeyClass(Text.class);
 		job2.setMapOutputValueClass(Text.class);
 		job2.setOutputKeyClass(Text.class);
-		job2.setOutputValueClass(Text.class);
+		job2.setOutputValueClass(StringArrayWritable.class);
 		job2.setNumReduceTasks(50);
 		// setthe class of each stage in mapreduce
 		job2.setMapperClass(PruneMapper.class);
 		job2.setReducerClass(PruneReduce.class);
 
 		FileInputFormat.addInputPath(job2, new Path("Hw2/tmp"));
-		FileOutputFormat.setOutputPath(job2, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job2, new Path("Hw2/pr"));
 		job2.waitForCompletion(true);
-		long N = job2
-				.getCounters()
-				.findCounter("org.apache.hadoop.mapred.Task$Counter",
-						"REDUCE_OUTPUT_RECORDS").getValue();
-		System.out.println("NNNNNN :" + N);
-		System.exit(1);
 
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(new Path("Hw2/tmp"), true);
+
+		Job job3 = Job.getInstance(conf, "PageRankMr-CompuDangle");
+		job3.setJarByClass(PageRankMr.class);
+		job3.setInputFormatClass(KeyValueTextInputFormat.class);
+		job3.setMapOutputKeyClass(Text.class);
+		job3.setMapOutputValueClass(Text.class);
+		job3.setOutputKeyClass(Text.class);
+		job3.setOutputValueClass(Text.class);
+		job3.setNumReduceTasks(1);
+		// setthe class of each stage in mapreduce
+		job3.setMapperClass(CompuDanglMapper.class);
+		job3.setReducerClass(CompuDanglReduce.class);
+
+		FileInputFormat.addInputPath(job3, new Path("Hw2/pr"));
+		FileOutputFormat.setOutputPath(job3, new Path(args[1]));
+		job3.waitForCompletion(true);
+
+		System.exit(1);
 
 	}
 }

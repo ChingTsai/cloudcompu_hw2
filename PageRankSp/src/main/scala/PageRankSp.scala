@@ -42,7 +42,7 @@ object PageRankSp {
 
     link.cache();
 
-    val m = link.map(x => x._2.length).filter { _ == 0 }.count();
+    
     val n = link.count();
     val alpha = 0.85;
 
