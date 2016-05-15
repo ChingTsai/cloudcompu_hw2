@@ -2,6 +2,7 @@ package cloudCompu.PageRankMr;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -75,7 +76,7 @@ public class PageRankMr {
 		job3.setMapOutputKeyClass(Text.class);
 		job3.setMapOutputValueClass(DoubleWritable.class);
 		job3.setOutputKeyClass(Text.class);
-		job3.setOutputValueClass(DoubleWritable.class);
+		job3.setOutputValueClass(Text.class);
 		job3.setNumReduceTasks(1);
 		// setthe class of each stage in mapreduce
 		job3.setMapperClass(CompuDanglMapper.class);
@@ -87,11 +88,14 @@ public class PageRankMr {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				fs.open(new Path("Hw2/tmp/part-r-00000"))));
-		String[] dangl;
-		dangl = br.readLine().split(" ");
-		System.out.println("rrr" + dangl.length);
-		conf.setDouble("dangl", Double.parseDouble(dangl[2]));
-		System.out.println(dangl[2]);
+		
+		String dangl;
+		StringTokenizer tokens = new StringTokenizer(br.readLine());
+		tokens.nextToken();
+		dangl = tokens.nextToken();
+		System.out.println(dangl);
+		conf.setDouble("dangl", Double.parseDouble(dangl));
+		
 		Job job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
 		job4.setJarByClass(PageRankMr.class);
 		job4.setInputFormatClass(KeyValueTextInputFormat.class);

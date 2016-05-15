@@ -32,9 +32,9 @@ public class CompuNextPrReduce extends
 				outpr += val.getPr();
 			}
 		}
-		sb.insert(0, Double.valueOf(pr + outpr / N));
+		sb.insert(0, String.valueOf(pr + outpr / N));
 		sb.insert(0, " ");
-		sb.insert(0, Double.valueOf(prepr));
+		sb.insert(0, String.valueOf(prepr));
 		title.set(key);
 		link.set(sb.toString());
 		context.write(title, link);

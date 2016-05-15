@@ -1,16 +1,14 @@
 package cloudCompu.PageRankMr;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class CompuDanglReduce extends
-		Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+public class CompuDanglReduce extends Reducer<Text, DoubleWritable, Text, Text> {
 	private Text title = new Text();
-	private DoubleWritable pr = new DoubleWritable();
+	private Text pr = new Text();
 
 	public void reduce(Text key, Iterable<DoubleWritable> values,
 			Context context) throws IOException, InterruptedException {
@@ -20,8 +18,9 @@ public class CompuDanglReduce extends
 		for (DoubleWritable val : values) {
 			tmppr += val.get();
 		}
+
 		title.set("Dangle");
-		pr.set(tmppr*alpha/N);
+		pr.set(String.valueOf(tmppr * alpha));
 		context.write(title, pr);
 	}
 }
