@@ -30,7 +30,10 @@ public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 			len = Integer.parseInt(par[2]);
 
 			if (len != -1) {
-				sb.append("&gt;" + detial[1]);
+				if (len > 0)
+					sb.append("&gt;" + detial[1]);
+				else
+					sb.append("&gt;");
 				pr = Double.parseDouble(par[1]);
 				prepr = par[0];
 			} else {
