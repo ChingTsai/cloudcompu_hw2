@@ -13,8 +13,8 @@ public class CompuErrMapper extends Mapper<Text, Text, Text, DoubleWritable> {
 	public void map(Text key, Text value, Context context) throws IOException,
 			InterruptedException {
 		String[] detial = value.toString().split("&gt;");
-		if (detial.length == 1) {
-			System.out.println(key);
+		if (detial.length == 0) {
+			
 			title.set(key);
 			dis.set(9.9);
 			context.write(title, dis);
