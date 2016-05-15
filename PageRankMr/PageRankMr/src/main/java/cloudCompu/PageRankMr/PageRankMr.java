@@ -128,7 +128,7 @@ public class PageRankMr {
 		job5.setMapOutputValueClass(DoubleWritable.class);
 		job5.setOutputKeyClass(Text.class);
 		job5.setOutputValueClass(Text.class);
-		job5.setNumReduceTasks(50);
+		job5.setNumReduceTasks(1);
 		// setthe class of each stage in mapreduce
 		job5.setCombinerClass(CompuCombi.class);
 		job5.setMapperClass(CompuErrMapper.class);

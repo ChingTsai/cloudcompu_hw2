@@ -19,7 +19,7 @@ public class CompuErrReduce extends Reducer<Text, DoubleWritable, Text, Text> {
 			tmppr += val.get();
 		}
 
-		title.set("Sum");
+		title.set(key);
 		err.set(String.valueOf(tmppr));
 		context.write(title, err);
 	}
