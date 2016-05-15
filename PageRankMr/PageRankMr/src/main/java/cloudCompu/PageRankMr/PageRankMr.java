@@ -43,7 +43,7 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job1, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job1, new Path("Hw2/tmp"));
 		job1.waitForCompletion(true);
-		Thread.currentThread().wait(100);
+		//Thread.currentThread().wait(100);
 		long N = job1
 				.getCounters()
 				.findCounter("org.apache.hadoop.mapred.Task$Counter",
