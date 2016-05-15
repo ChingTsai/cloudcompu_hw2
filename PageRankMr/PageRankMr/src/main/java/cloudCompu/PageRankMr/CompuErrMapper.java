@@ -15,7 +15,7 @@ public class CompuErrMapper extends Mapper<Text, Text, Text, DoubleWritable> {
 		String[] detial = value.toString().split("&gt;");
 
 			String[] par = detial[0].split(" ");
-			if(par.length == 1) {
+			if(par[0] == null ||par[1] == null) {
 				title.set(key);
 				dis.set(9.9);
 				context.write(title, dis);
