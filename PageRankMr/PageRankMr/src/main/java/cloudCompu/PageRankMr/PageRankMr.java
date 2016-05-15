@@ -118,7 +118,7 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job4, new Path("Hw2/pr"));
 		FileOutputFormat.setOutputPath(job4, new Path("Hw2/tmp"));
 		job4.waitForCompletion(true);
-
+		/*
 		fs.delete(new Path("Hw2/pr"), true);
 
 		Job job5 = Job.getInstance(conf, "PageRankMr-CompuErr");
@@ -137,7 +137,7 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job5, new Path("Hw2/tmp"));
 		FileOutputFormat.setOutputPath(job5, new Path("Hw2/pr"));
 		job5.waitForCompletion(true);
-
+*/
 		System.exit(1);
 
 	}
