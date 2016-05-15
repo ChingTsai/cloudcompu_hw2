@@ -17,7 +17,7 @@ object PageRankSp {
     var hdfs = FileSystem.get(hadoopConf)
     try { hdfs.delete(new Path(outputPath), true) } catch { case _: Throwable => {} }
 
-    val lines = sc.textFile(filePath, sc.defaultParallelism * 10)
+    val lines = sc.textFile(filePath, sc.defaultParallelism * 5)
     // lines.cache();
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
@@ -35,11 +35,11 @@ object PageRankSp {
 
         (title.capitalize, out);
         out.map { x => (x, title) }.+:(title, "&gt")
-      }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).filter(_._2.exists { _ == "&gt" })
+      }).flatMap(y => y).groupByKey(sc.defaultParallelism * 5).filter(_._2.exists { _ == "&gt" })
         //
         .map(row => {
           row._2.toArray.filter(_ != "&gt").map(tp => (tp, row._1)).+:(row._1, "&gt");
-        }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }));
+        }).flatMap(y => y).groupByKey(sc.defaultParallelism * 5).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }));
 
     link.cache();
 
@@ -96,8 +96,8 @@ object PageRankSp {
         row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) }.+:(row._1, 1.0 / n * (1 - alpha) + dangpr);
 
       }).flatMap(y => y).reduceByKey(_ + _);
-      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)), sc.defaultParallelism * 10)).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
-      rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism * 10);
+      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)), sc.defaultParallelism * 5)).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
+      rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism * 5);
 
       micros = (System.nanoTime - st) / 1000000000.0
       System.out.println("Iteration : " + iter + " err: " + Err);
@@ -107,7 +107,7 @@ object PageRankSp {
 
     //res.saveAsTextFile(outputPath);
     val res = rddPR.map(x => (x._1, x._2._2));
-    res.sortBy({ case (page, pr) => (-pr, page) }, true, sc.defaultParallelism * 3).map(x => x._1 + "\t" + x._2).saveAsTextFile(outputPath);
+    res.sortBy({ case (page, pr) => (-pr, page) }, true, sc.defaultParallelism * 5).map(x => x._1 + "\t" + x._2).saveAsTextFile(outputPath);
 
     sc.stop
   }
