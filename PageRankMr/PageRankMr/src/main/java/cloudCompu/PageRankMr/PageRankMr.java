@@ -49,8 +49,8 @@ public class PageRankMr {
 		job2.setMapperClass(PruneMapper.class);
 		job2.setReducerClass(PruneReduce.class);
 
-		FileInputFormat.addInputPath(job1, new Path("Hw2/tmp"));
-		FileOutputFormat.setOutputPath(job1, new Path(args[1]));
+		FileInputFormat.addInputPath(job2, new Path("Hw2/tmp"));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1]));
 
 		System.exit(job2.waitForCompletion(true) ? 0 : 1);
 
