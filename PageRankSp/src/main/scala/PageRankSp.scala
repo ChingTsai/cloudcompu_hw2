@@ -35,10 +35,10 @@ object PageRankSp {
 
         (title.capitalize, out);
         out.map { x => (x, title) }.+:(title, "&gt")
-      }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).filter(!_._2.exists { _ == "&gt" })
+      }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).filter(_._2.exists { _ == "&gt" })
         //
         .map(row => {
-          row._2.toArray.filter(_ == "&gt").map(tp => (tp, row._1)).+:(row._1, "&gt");
+          row._2.toArray.filter(_ != "&gt").map(tp => (tp, row._1)).+:(row._1, "&gt");
         }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ == "&gt" }));
 
     link.cache();
