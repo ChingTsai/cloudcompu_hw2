@@ -7,36 +7,39 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
 
-public class CompuNextPrReduce extends
-		Reducer<Text, StringArrayWritable, Text, Text> {
+public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 	private Text title = new Text();
-	private Text link = new Text();
+	private Text links = new Text();
 
-	public void reduce(Text key, Iterable<StringArrayWritable> values,
-			Context context) throws IOException, InterruptedException {
+	public void reduce(Text key, Iterable<Text> values, Context context)
+			throws IOException, InterruptedException {
 		Long N = context.getConfiguration().getLong("N", 1);
 		StringBuilder sb = new StringBuilder("");
 
 		double pr = 0.0d;
-		double prepr = 0.0d;
+		String prepr = null;
 		double outpr = 0.0d;
-		for (StringArrayWritable val : values) {
-			if (val.getLen() != 0) {
-				for (Text t : (Text[]) val.toArray()) {
+		String[] link;
+		int len;
+		for (Text val : values) {
+			link = val.toString().split(" ");
+			len = Integer.parseInt(link[2]);
+			if (len != -1) {
+				for (int i = 0; i < len; i++) {
 					sb.append(" ");
-					sb.append(t);
+					sb.append(link[i + 2]);
 				}
-				pr = val.getPr();
-				prepr = val.getprePr();
+				pr = Double.parseDouble(link[1]);
+				prepr = link[0];
 			} else {
-				outpr += val.getPr();
+				outpr += Double.parseDouble(link[0]);
 			}
 		}
 		sb.insert(0, String.valueOf(pr + outpr / N));
 		sb.insert(0, " ");
-		sb.insert(0, String.valueOf(prepr));
+		sb.insert(0, prepr);
 		title.set(key);
-		link.set(sb.toString());
-		context.write(title, link);
+		links.set(sb.toString());
+		context.write(title, links);
 	}
 }

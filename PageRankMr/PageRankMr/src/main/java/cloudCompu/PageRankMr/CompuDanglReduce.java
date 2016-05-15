@@ -14,7 +14,7 @@ public class CompuDanglReduce extends Reducer<Text, DoubleWritable, Text, Text> 
 			Context context) throws IOException, InterruptedException {
 		double tmppr = 0.0d;
 		double alpha = context.getConfiguration().getDouble("alpha", 0.85);
-		long N = context.getConfiguration().getLong("N", 1);
+
 		for (DoubleWritable val : values) {
 			tmppr += val.get();
 		}

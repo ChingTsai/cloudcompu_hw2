@@ -6,10 +6,9 @@ import java.util.Arrays;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class CompuNextPrMapper extends
-		Mapper<Text, Text, Text, StringArrayWritable> {
+public class CompuNextPrMapper extends Mapper<Text, Text, Text, Text> {
 	private Text title = new Text();
-	private StringArrayWritable pr = new StringArrayWritable();
+	private Text pr = new Text();
 
 	public void map(Text key, Text value, Context context) throws IOException,
 			InterruptedException {
@@ -23,23 +22,30 @@ public class CompuNextPrMapper extends
 			int c = links.length - 2;
 			for (int i = 2; i < links.length; i++) {
 				title.set(links[i]);
-				pr.setprePr(prepr / c);
+				pr.set(String.valueOf(prepr / c) + " 0 -1");
 				context.write(title, pr);
 			}
 
 			title.set(key.toString());
-			pr.setprePr(prepr);
-			pr.setPr(((1 - alpha) + alpha * dangl) / N);
-			Text[] l = new Text[links.length - 2];
+			StringBuilder sb = new StringBuilder("");
+			sb.append(links[0]);
+			sb.append(" ");
+			sb.append(String.valueOf(((1 - alpha) + alpha * dangl) / N));
 			for (int i = 2; i < links.length; i++) {
-				l[i - 2].set(links[i]);
+				sb.append(" ");
+				sb.append(links[i]);
 			}
-			pr.set(l);
+			sb.append(String.valueOf(links.length - 2));
+			pr.set(sb.toString());
 			context.write(title, pr);
 		} else {
 			title.set(key.toString());
-			pr.setprePr(prepr);
-			pr.setPr(((1 - alpha) + alpha * dangl) / N);
+			StringBuilder sb = new StringBuilder("");
+			sb.append(links[0]);
+			sb.append(String.valueOf(" "));
+			sb.append(String.valueOf(((1 - alpha) + alpha * dangl) / N));
+			sb.append("0");
+			pr.set(sb.toString());
 			context.write(title, pr);
 		}
 	}
