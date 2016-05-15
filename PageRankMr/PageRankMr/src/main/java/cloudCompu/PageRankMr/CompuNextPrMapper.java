@@ -24,7 +24,7 @@ public class CompuNextPrMapper extends Mapper<Text, Text, Text, Text> {
 			links = detial[1].split("&lt;");
 			for (int i = 0; i < len; i++) {
 				title.set(links[i]);
-				pr.set(String.valueOf(prepr / len) + " 0 -1");
+				pr.set(String.valueOf(prepr / len * alpha) + " 0 -1");
 				context.write(title, pr);
 			}
 
