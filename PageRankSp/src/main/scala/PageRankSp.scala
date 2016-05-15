@@ -38,16 +38,16 @@ object PageRankSp {
 
     val linkMap = (link.map(x => x._1)).toArray().toSet;
 
-    val bclinkMap = sc.broadcast(linkMap);
+    //val bclinkMap = sc.broadcast(linkMap);
     //remove missing link
     link = link.map(l => {
-      (l._1, l._2.filter { x => bclinkMap.value.contains(x) })
+      (l._1, l._2.filter { x => linkMap.contains(x) })
     })
 
     link.cache();
 
     val m = link.map(x => x._2.length).filter { _ == 0 }.count();
-    val n = bclinkMap.value.size;
+    val n = linkMap.size;
     val alpha = 0.85;
 
     var micros = (System.nanoTime - st) / 1000000000.0
