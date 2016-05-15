@@ -18,7 +18,7 @@ object PageRankSp {
     try { hdfs.delete(new Path(outputPath), true) } catch { case _: Throwable => {} }
 
     val lines = sc.textFile(filePath, sc.defaultParallelism * 10)
-    lines.cache();
+    // lines.cache();
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
 
@@ -29,13 +29,34 @@ object PageRankSp {
         val lineXml = scala.xml.XML.loadString(line.toString())
         val title = (lineXml \ "title").text;
 
+        val out = regex.findAllIn(lineXml.text).toArray
+          .map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]") }
+          .filter { _.length > 0 }.map(_.head.capitalize);
+
+        (title.capitalize, out);
+        out.map { x => (x, title) }.+:(title, "&gt")
+      }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).filter(!_._2.exists { _ == "&gt" })
+        //
+        .map(row => {
+          row._2.toArray.filter(_ == "&gt").map(tp => (tp, row._1)).+:(row._1, "&gt");
+        }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ == "&gt" }));
+
+    link.cache();
+
+    /*    
+       var link =
+      lines.map(line => {
+        val lineXml = scala.xml.XML.loadString(line.toString())
+        val title = (lineXml \ "title").text;
+
         val out = regex.findAllIn(lineXml.text).toList
           .map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]") }
           .filter { _.length > 0 }.map(_.head.capitalize);
         //val rddout = sc.parallelize(out, sc.defaultParallelism);
         (title.capitalize, out);
       });
-
+    
+    
     val linkMap = (link.map(x => x._1)).toArray().toSet;
 
     //val bclinkMap = sc.broadcast(linkMap);
@@ -45,9 +66,12 @@ object PageRankSp {
     })
 
     link.cache();
+    
+    
+  */
 
     val m = link.map(x => x._2.length).filter { _ == 0 }.count();
-    val n = linkMap.size;
+    val n = link.count();
     val alpha = 0.85;
 
     var micros = (System.nanoTime - st) / 1000000000.0
@@ -55,7 +79,7 @@ object PageRankSp {
 
     //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
-    var rddPR = link.map(x => (x._1, (x._2.toArray, 1.0 / n)));
+    var rddPR = link.map(x => (x._1, (x._2, 1.0 / n)));
 
     var Err = 1.0;
     var iter = 0;
@@ -69,10 +93,10 @@ object PageRankSp {
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       var tmpPR = rddPR.map(row => {
 
-        row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) } ++ Array((row._1, 1.0 / n * (1 - alpha) + dangpr));
+        row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) }.+:(row._1, 1.0 / n * (1 - alpha) + dangpr);
 
       }).flatMap(y => y).reduceByKey(_ + _);
-      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)))).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
+      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)), sc.defaultParallelism * 10)).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
       rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism * 10);
 
       micros = (System.nanoTime - st) / 1000000000.0
