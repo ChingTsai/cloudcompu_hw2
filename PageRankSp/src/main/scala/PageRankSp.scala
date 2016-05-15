@@ -96,8 +96,8 @@ object PageRankSp {
         row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) }.+:(row._1, 1.0 / n * (1 - alpha) + dangpr);
 
       }).flatMap(y => y).reduceByKey(_ + _);
-      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)), sc.defaultParallelism * 5)).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
-      rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism * 5);
+      Err = (tmpPR.join(rddPR.map(x => (x._1, x._2._2)), sc.defaultParallelism * 8)).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _);
+      rddPR = rddPR.map(x => (x._1, x._2._1)).join(tmpPR, sc.defaultParallelism * 8);
 
       micros = (System.nanoTime - st) / 1000000000.0
       System.out.println("Iteration : " + iter + " err: " + Err);
