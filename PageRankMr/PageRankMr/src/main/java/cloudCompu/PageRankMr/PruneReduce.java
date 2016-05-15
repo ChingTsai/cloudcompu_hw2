@@ -13,12 +13,12 @@ public class PruneReduce extends Reducer<Text, Text, Text, StringArrayWritable> 
 	public void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 
-		ArrayList<String> link = new ArrayList<String>();
+		ArrayList<Text> link = new ArrayList<Text>();
 		StringBuilder sb = new StringBuilder();
 		long N = context.getConfiguration().getLong("N", 1);
 		for (Text val : values) {
 			if (!val.toString().equals("&gt"))
-				link.add(val.toString());
+				link.add(val);
 			// sb.append(", " + val);
 		}
 
