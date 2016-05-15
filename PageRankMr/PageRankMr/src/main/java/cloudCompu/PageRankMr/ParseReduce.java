@@ -31,7 +31,9 @@ public class ParseReduce extends Reducer<Text, Text, Text, Text> {
 				link.set(key);
 				context.write(title, link);
 			}
-			
+			title.set(key);
+			link.set("&gt");
+			context.write(title, link);
 		}
 
 	}
