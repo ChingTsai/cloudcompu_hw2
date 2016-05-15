@@ -43,15 +43,14 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job1, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job1, new Path("Hw2/tmp"));
 		job1.waitForCompletion(true);
-		//Thread.currentThread().wait(100);
+		// Thread.currentThread().wait(100);
 		long N = job1
 				.getCounters()
 				.findCounter("org.apache.hadoop.mapred.Task$Counter",
 						"MAP_INPUT_RECORDS").getValue();
 		System.out.println("N:" + N);
 		conf.setLong("N", N);
-		
-		
+
 		Job job2 = Job.getInstance(conf, "PageRankMr-Parse");
 		job2.setJarByClass(PageRankMr.class);
 		job2.setInputFormatClass(KeyValueTextInputFormat.class);
@@ -66,13 +65,13 @@ public class PageRankMr {
 
 		FileInputFormat.addInputPath(job2, new Path("Hw2/tmp"));
 		FileOutputFormat.setOutputPath(job2, new Path("Hw2/pr"));
-		
+
 		job2.waitForCompletion(true);
 
 		FileSystem fs = FileSystem.get(conf);
-		
-		//loop
-		
+
+		// loop
+
 		fs.delete(new Path("Hw2/tmp"), true);
 
 		Job job3 = Job.getInstance(conf, "PageRankMr-CompuDangle");
@@ -94,16 +93,16 @@ public class PageRankMr {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				fs.open(new Path("Hw2/tmp/part-r-00000"))));
-		
+
 		String dangl;
 		StringTokenizer tokens = new StringTokenizer(br.readLine());
 		tokens.nextToken();
 		dangl = tokens.nextToken();
 		System.out.println(dangl);
 		conf.setDouble("dangl", Double.parseDouble(dangl));
+
 		fs.delete(new Path("Hw2/tmp"), true);
-		
-		
+
 		Job job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
 		job4.setJarByClass(PageRankMr.class);
 		job4.setInputFormatClass(KeyValueTextInputFormat.class);
@@ -119,7 +118,9 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job4, new Path("Hw2/pr"));
 		FileOutputFormat.setOutputPath(job4, new Path("Hw2/tmp"));
 		job4.waitForCompletion(true);
-		
+
+		fs.delete(new Path("Hw2/pr"), true);
+
 		Job job5 = Job.getInstance(conf, "PageRankMr-CompuErr");
 		job5.setJarByClass(PageRankMr.class);
 		job5.setInputFormatClass(KeyValueTextInputFormat.class);
@@ -136,8 +137,6 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job5, new Path("Hw2/tmp"));
 		FileOutputFormat.setOutputPath(job5, new Path("Hw2/pr"));
 		job5.waitForCompletion(true);
-		
-		
 
 		System.exit(1);
 
