@@ -50,7 +50,8 @@ public class PageRankMr {
 						"MAP_INPUT_RECORDS").getValue();
 		System.out.println("N:" + N);
 		conf.setLong("N", N);
-		while(job1.cleanupProgress()!=1.0);
+		job1.killJob();
+		
 		Job job2 = Job.getInstance(conf, "PageRankMr-Parse");
 		job2.setJarByClass(PageRankMr.class);
 		job2.setInputFormatClass(KeyValueTextInputFormat.class);
