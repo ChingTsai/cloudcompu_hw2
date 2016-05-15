@@ -42,7 +42,7 @@ public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 		}
 		sb.insert(0, par[2]);
 		sb.insert(0, " ");
-		sb.insert(0, String.valueOf(pr + outpr / N));
+		sb.insert(0, String.valueOf(pr + outpr ));
 		sb.insert(0, " ");
 		sb.insert(0, prepr);
 		title.set(key);
