@@ -15,7 +15,7 @@ public class CompuDanglMapper extends Mapper<Text, Text, Text, DoubleWritable> {
 
 		String[] links = value.toString().split(" ");
 
-		if (links.length == 1) {
+		if (links.length == 2) {
 			title.set("Dangle");
 			pr.set(Double.parseDouble(links[0]));
 			context.write(title, pr);

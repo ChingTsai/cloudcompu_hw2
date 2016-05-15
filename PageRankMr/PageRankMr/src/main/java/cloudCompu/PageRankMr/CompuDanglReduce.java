@@ -14,13 +14,14 @@ public class CompuDanglReduce extends
 
 	public void reduce(Text key, Iterable<DoubleWritable> values,
 			Context context) throws IOException, InterruptedException {
-		Double tmppr = 0.0d;
-		Double alpha = context.getConfiguration().getDouble("alpha", 0.85);
+		double tmppr = 0.0d;
+		double alpha = context.getConfiguration().getDouble("alpha", 0.85);
+		long N = context.getConfiguration().getLong("N", 1);
 		for (DoubleWritable val : values) {
 			tmppr += val.get();
 		}
 		title.set("Dangle");
-		pr.set(tmppr*alpha);
+		pr.set(tmppr*alpha/N);
 		context.write(title, pr);
 	}
 }

@@ -25,7 +25,7 @@ public class PruneReduce extends Reducer<Text, Text, Text, Text> {
 
 		title.set(key);
 
-		links.set(String.valueOf(1d / N) + " " + sb.toString());
+		links.set(String.valueOf(1d / N ) + " 1 " + sb.toString());
 		context.write(title, links);
 
 	}

@@ -1,5 +1,8 @@
 package cloudCompu.PageRankMr;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -79,8 +82,30 @@ public class PageRankMr {
 		job3.setReducerClass(CompuDanglReduce.class);
 
 		FileInputFormat.addInputPath(job3, new Path("Hw2/pr"));
-		FileOutputFormat.setOutputPath(job3, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job3, new Path("Hw2/tmp"));
 		job3.waitForCompletion(true);
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				fs.open(new Path("Hw2/tmp"))));
+		String[] dangl;
+		dangl = br.readLine().split("/t");
+		conf.setDouble("dangl", Double.parseDouble(dangl[1]));
+		System.out.println(dangl);
+		Job job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
+		job4.setJarByClass(PageRankMr.class);
+		job4.setInputFormatClass(KeyValueTextInputFormat.class);
+		job4.setMapOutputKeyClass(Text.class);
+		job4.setMapOutputValueClass(StringArrayWritable.class);
+		job4.setOutputKeyClass(Text.class);
+		job4.setOutputValueClass(Text.class);
+		job4.setNumReduceTasks(50);
+		// setthe class of each stage in mapreduce
+		job4.setMapperClass(CompuNextPrMapper.class);
+		job4.setReducerClass(CompuNextPrReduce.class);
+
+		FileInputFormat.addInputPath(job4, new Path("Hw2/pr"));
+		FileOutputFormat.setOutputPath(job4, new Path(args[1]));
+		job4.waitForCompletion(true);
 
 		System.exit(1);
 
