@@ -14,12 +14,14 @@ public class ParseReduce extends Reducer<Text, Text, Text, Text> {
 			throws IOException, InterruptedException {
 
 		ArrayList<String> titles = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder(); 
 
 		boolean miss = true;
 		for (Text val : values) {
 			if (val.toString().equals("&gt")) {
 				miss = false;
 			} else {
+				//sb.append(" ,"+val);
 				titles.add(val.toString());
 			}
 		}
@@ -27,8 +29,9 @@ public class ParseReduce extends Reducer<Text, Text, Text, Text> {
 			for (String s : titles) {
 				title.set(s);
 				link.set(key);
+				context.write(title, link);
 			}
-			context.write(title, link);
+			
 		}
 
 	}
