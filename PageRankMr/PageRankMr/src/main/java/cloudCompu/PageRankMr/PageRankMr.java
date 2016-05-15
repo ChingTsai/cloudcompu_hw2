@@ -70,6 +70,9 @@ public class PageRankMr {
 		job2.waitForCompletion(true);
 
 		FileSystem fs = FileSystem.get(conf);
+		
+		//loop
+		
 		fs.delete(new Path("Hw2/tmp"), true);
 
 		Job job3 = Job.getInstance(conf, "PageRankMr-CompuDangle");
@@ -98,6 +101,8 @@ public class PageRankMr {
 		dangl = tokens.nextToken();
 		System.out.println(dangl);
 		conf.setDouble("dangl", Double.parseDouble(dangl));
+		fs.delete(new Path("Hw2/tmp"), true);
+		
 		
 		Job job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
 		job4.setJarByClass(PageRankMr.class);
@@ -112,8 +117,27 @@ public class PageRankMr {
 		job4.setReducerClass(CompuNextPrReduce.class);
 
 		FileInputFormat.addInputPath(job4, new Path("Hw2/pr"));
-		FileOutputFormat.setOutputPath(job4, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job4, new Path("Hw2/tmp"));
 		job4.waitForCompletion(true);
+		
+		Job job5 = Job.getInstance(conf, "PageRankMr-CompuErr");
+		job5.setJarByClass(PageRankMr.class);
+		job5.setInputFormatClass(KeyValueTextInputFormat.class);
+		job5.setMapOutputKeyClass(Text.class);
+		job5.setMapOutputValueClass(Text.class);
+		job5.setOutputKeyClass(Text.class);
+		job5.setOutputValueClass(Text.class);
+		job5.setNumReduceTasks(50);
+		// setthe class of each stage in mapreduce
+		job5.setCombinerClass(CompuCombi.class);
+		job5.setMapperClass(CompuErrMapper.class);
+		job5.setReducerClass(CompuErrReduce.class);
+
+		FileInputFormat.addInputPath(job5, new Path("Hw2/tmp"));
+		FileOutputFormat.setOutputPath(job5, new Path("Hw2/pr"));
+		job5.waitForCompletion(true);
+		
+		
 
 		System.exit(1);
 
