@@ -51,7 +51,7 @@ public class PageRankMr {
 		System.out.println("N:" + N);
 		conf.setLong("N", N);
 
-		Job job2 = Job.getInstance(conf, "PageRankMr-Parse");
+		Job job2 = Job.getInstance(conf, "PageRankMr-Prune");
 		job2.setJarByClass(PageRankMr.class);
 		job2.setInputFormatClass(KeyValueTextInputFormat.class);
 		job2.setMapOutputKeyClass(Text.class);

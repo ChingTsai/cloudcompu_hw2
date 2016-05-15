@@ -13,19 +13,18 @@ public class CompuErrMapper extends Mapper<Text, Text, Text, DoubleWritable> {
 	public void map(Text key, Text value, Context context) throws IOException,
 			InterruptedException {
 		String[] detial = value.toString().split("&gt;");
-		if (detial.length == 0) {
-			
-			title.set(key);
-			dis.set(9.9);
-			context.write(title, dis);
-		} else {
-			String[] par = detial[0].split(" ");
 
+			String[] par = detial[0].split(" ");
+			if(par.length == 1) {
+				title.set(key);
+				dis.set(9.9);
+				context.write(title, dis);
+			}else{
 			title.set("Sum");
 			dis.set(Math.abs(Double.parseDouble(par[0])
 					- Double.parseDouble(par[1])));
 			context.write(title, dis);
-		}
+			}
 	}
 
 }
