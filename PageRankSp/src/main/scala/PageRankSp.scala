@@ -33,7 +33,6 @@ object PageRankSp {
           .map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]") }
           .filter { _.length > 0 }.map(_.head.capitalize);
 
-        (title.capitalize, out);
         out.map { x => (x, title) }.+:(title, "&gt")
       }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).filter(_._2.exists { _ == "&gt" })
         //
@@ -42,33 +41,6 @@ object PageRankSp {
         }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }));
 
     link.cache();
-
-    /*    
-       var link =
-      lines.map(line => {
-        val lineXml = scala.xml.XML.loadString(line.toString())
-        val title = (lineXml \ "title").text;
-
-        val out = regex.findAllIn(lineXml.text).toList
-          .map { x => x.replaceAll("[\\[\\]]", "").split("[\\|#]") }
-          .filter { _.length > 0 }.map(_.head.capitalize);
-        //val rddout = sc.parallelize(out, sc.defaultParallelism);
-        (title.capitalize, out);
-      });
-    
-    
-    val linkMap = (link.map(x => x._1)).toArray().toSet;
-
-    //val bclinkMap = sc.broadcast(linkMap);
-    //remove missing link
-    link = link.map(l => {
-      (l._1, l._2.filter { x => linkMap.contains(x) })
-    })
-
-    link.cache();
-    
-    
-  */
 
     val m = link.map(x => x._2.length).filter { _ == 0 }.count();
     val n = link.count();
