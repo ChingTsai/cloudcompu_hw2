@@ -88,9 +88,10 @@ public class PageRankMr {
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				fs.open(new Path("Hw2/tmp/part-r-00000"))));
 		String[] dangl;
-		dangl = br.readLine().split("/t");
-		conf.setDouble("dangl", Double.parseDouble(dangl[1]));
-		System.out.println(dangl);
+		dangl = br.readLine().split(" ");
+		System.out.println("rrr" + dangl.length);
+		conf.setDouble("dangl", Double.parseDouble(dangl[2]));
+		System.out.println(dangl[2]);
 		Job job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
 		job4.setJarByClass(PageRankMr.class);
 		job4.setInputFormatClass(KeyValueTextInputFormat.class);
