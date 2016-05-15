@@ -24,7 +24,7 @@ public class PruneReduce extends Reducer<Text, Text, Text, StringArrayWritable> 
 
 		title.set(key);
 		links.setPr((1d / N));
-		links.set(link.toArray(new StringArrayWritable[link.size()]));
+		links.set((Text[]) link.toArray(new Text[link.size()]));
 		context.write(title, links);
 
 	}
