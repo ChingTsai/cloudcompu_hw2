@@ -16,6 +16,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class PageRankMr {
 	public static void main(String[] args) throws Exception {
+
+		Path tmp_path = new Path("Hw2/tmp");
+		Path err_path = new Path("Hw2/err");
+		Path pr_path = new Path("Hw2/pr");
+		long st, ed;
+		double micros;
 		Configuration conf = new Configuration();
 		conf.setDouble("alpha", 0.85d);
 
@@ -41,7 +47,7 @@ public class PageRankMr {
 
 		// add input/output path
 		FileInputFormat.addInputPath(job1, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job1, new Path("Hw2/tmp"));
+		FileOutputFormat.setOutputPath(job1, tmp_path);
 		job1.waitForCompletion(true);
 		// Thread.currentThread().wait(100);
 		long N = job1
@@ -63,80 +69,100 @@ public class PageRankMr {
 		job2.setMapperClass(PruneMapper.class);
 		job2.setReducerClass(PruneReduce.class);
 
-		FileInputFormat.addInputPath(job2, new Path("Hw2/tmp"));
-		FileOutputFormat.setOutputPath(job2, new Path("Hw2/pr"));
+		FileInputFormat.addInputPath(job2, tmp_path);
+		FileOutputFormat.setOutputPath(job2, pr_path);
 
 		job2.waitForCompletion(true);
 
 		FileSystem fs = FileSystem.get(conf);
 
 		// loop
+		Job job3, job4, job5;
 
-		fs.delete(new Path("Hw2/tmp"), true);
+		for (int iter = 0; iter < 5; iter++) {
+			st = System.nanoTime();
+			fs.delete(tmp_path, true);
 
-		Job job3 = Job.getInstance(conf, "PageRankMr-CompuDangle");
-		job3.setJarByClass(PageRankMr.class);
-		job3.setInputFormatClass(KeyValueTextInputFormat.class);
-		job3.setMapOutputKeyClass(Text.class);
-		job3.setMapOutputValueClass(DoubleWritable.class);
-		job3.setOutputKeyClass(Text.class);
-		job3.setOutputValueClass(Text.class);
-		job3.setCombinerClass(CompuCombi.class);
-		job3.setNumReduceTasks(1);
-		// setthe class of each stage in mapreduce
-		job3.setMapperClass(CompuDanglMapper.class);
-		job3.setReducerClass(CompuDanglReduce.class);
+			job3 = Job.getInstance(conf, "PageRankMr-CompuDangle");
+			job3.setJarByClass(PageRankMr.class);
+			job3.setInputFormatClass(KeyValueTextInputFormat.class);
+			job3.setMapOutputKeyClass(Text.class);
+			job3.setMapOutputValueClass(DoubleWritable.class);
+			job3.setOutputKeyClass(Text.class);
+			job3.setOutputValueClass(Text.class);
+			job3.setCombinerClass(CompuCombi.class);
+			job3.setNumReduceTasks(1);
+			// setthe class of each stage in mapreduce
+			job3.setMapperClass(CompuDanglMapper.class);
+			job3.setReducerClass(CompuDanglReduce.class);
 
-		FileInputFormat.addInputPath(job3, new Path("Hw2/pr"));
-		FileOutputFormat.setOutputPath(job3, new Path("Hw2/tmp"));
-		job3.waitForCompletion(true);
+			FileInputFormat.addInputPath(job3, pr_path);
+			FileOutputFormat.setOutputPath(job3, tmp_path);
+			job3.waitForCompletion(true);
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				fs.open(new Path("Hw2/tmp/part-r-00000"))));
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					fs.open(new Path("Hw2/tmp/part-r-00000"))));
 
-		String dangl;
-		StringTokenizer tokens = new StringTokenizer(br.readLine());
-		tokens.nextToken();
-		dangl = tokens.nextToken();
-		System.out.println(dangl);
-		conf.setDouble("dangl", Double.parseDouble(dangl));
+			String dangl;
+			StringTokenizer tokens = new StringTokenizer(br.readLine());
+			tokens.nextToken();
+			dangl = tokens.nextToken();
+			System.out.println(dangl);
+			conf.setDouble("dangl", Double.parseDouble(dangl));
 
-		fs.delete(new Path("Hw2/tmp"), true);
+			fs.delete(tmp_path, true);
 
-		Job job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
-		job4.setJarByClass(PageRankMr.class);
-		job4.setInputFormatClass(KeyValueTextInputFormat.class);
-		job4.setMapOutputKeyClass(Text.class);
-		job4.setMapOutputValueClass(Text.class);
-		job4.setOutputKeyClass(Text.class);
-		job4.setOutputValueClass(Text.class);
-		job4.setNumReduceTasks(50);
-		// setthe class of each stage in mapreduce
-		job4.setMapperClass(CompuNextPrMapper.class);
-		job4.setReducerClass(CompuNextPrReduce.class);
+			job4 = Job.getInstance(conf, "PageRankMr-CompuNextPr");
+			job4.setJarByClass(PageRankMr.class);
+			job4.setInputFormatClass(KeyValueTextInputFormat.class);
+			job4.setMapOutputKeyClass(Text.class);
+			job4.setMapOutputValueClass(Text.class);
+			job4.setOutputKeyClass(Text.class);
+			job4.setOutputValueClass(Text.class);
+			job4.setNumReduceTasks(50);
+			// setthe class of each stage in mapreduce
+			job4.setMapperClass(CompuNextPrMapper.class);
+			job4.setReducerClass(CompuNextPrReduce.class);
 
-		FileInputFormat.addInputPath(job4, new Path("Hw2/pr"));
-		FileOutputFormat.setOutputPath(job4, new Path("Hw2/tmp"));
-		job4.waitForCompletion(true);
+			FileInputFormat.addInputPath(job4, pr_path);
+			FileOutputFormat.setOutputPath(job4, tmp_path);
+			job4.waitForCompletion(true);
 
-		fs.delete(new Path("Hw2/pr"), true);
+			fs.delete(pr_path, true);
 
-		Job job5 = Job.getInstance(conf, "PageRankMr-CompuErr");
-		job5.setJarByClass(PageRankMr.class);
-		job5.setInputFormatClass(KeyValueTextInputFormat.class);
-		job5.setMapOutputKeyClass(Text.class);
-		job5.setMapOutputValueClass(DoubleWritable.class);
-		job5.setOutputKeyClass(Text.class);
-		job5.setOutputValueClass(Text.class);
-		job5.setNumReduceTasks(1);
-		// setthe class of each stage in mapreduce
-		job5.setCombinerClass(CompuCombi.class);
-		job5.setMapperClass(CompuErrMapper.class);
-		job5.setReducerClass(CompuErrReduce.class);
+			job5 = Job.getInstance(conf, "PageRankMr-CompuErr");
+			job5.setJarByClass(PageRankMr.class);
+			job5.setInputFormatClass(KeyValueTextInputFormat.class);
+			job5.setMapOutputKeyClass(Text.class);
+			job5.setMapOutputValueClass(DoubleWritable.class);
+			job5.setOutputKeyClass(Text.class);
+			job5.setOutputValueClass(Text.class);
+			job5.setNumReduceTasks(1);
+			// setthe class of each stage in mapreduce
+			job5.setCombinerClass(CompuCombi.class);
+			job5.setMapperClass(CompuErrMapper.class);
+			job5.setReducerClass(CompuErrReduce.class);
 
-		FileInputFormat.addInputPath(job5, new Path("Hw2/tmp"));
-		FileOutputFormat.setOutputPath(job5, new Path("Hw2/pr"));
-		job5.waitForCompletion(true);
+			FileInputFormat.addInputPath(job5, tmp_path);
+			FileOutputFormat.setOutputPath(job5, err_path);
+			job5.waitForCompletion(true);
+
+			br = new BufferedReader(new InputStreamReader(fs.open(new Path(
+					"Hw2/err/part-r-00000"))));
+			String err;
+			tokens = new StringTokenizer(br.readLine());
+			tokens.nextToken();
+			err = tokens.nextToken();
+
+			fs.delete(err_path, true);
+			fs.delete(pr_path, true);
+			fs.rename(tmp_path, pr_path);
+			ed = System.nanoTime();
+			micros = (ed - st) / 1000000000d;
+			System.out.println("Iteration : " + iter + " err: " + err);
+			System.out.println("Compute :  " + String.valueOf(micros)
+					+ " seconds");
+		}
 
 		System.exit(1);
 
