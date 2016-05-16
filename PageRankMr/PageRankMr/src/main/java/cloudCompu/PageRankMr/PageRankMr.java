@@ -84,7 +84,7 @@ public class PageRankMr {
 		double Err = 1.0;
 		int iter = 0;
 		String dangl, err;
-		while (Err > 0.5) {
+		while (Err > 0.001) {
 			st = System.nanoTime();
 			fs.delete(tmp_path, true);
 
