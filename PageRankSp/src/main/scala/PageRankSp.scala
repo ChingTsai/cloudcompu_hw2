@@ -59,7 +59,7 @@ object PageRankSp {
     rddPR.cache();
     //var tmpPR = rddPR.map(x => (x._1,x._2._2));
 
-    while (Err > 0.5) {
+    while (Err > 0.001) {
       st = System.nanoTime
 
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
