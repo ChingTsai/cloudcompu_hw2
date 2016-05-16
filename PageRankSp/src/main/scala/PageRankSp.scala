@@ -59,7 +59,7 @@ object PageRankSp {
     rddPR.cache();
     //var tmpPR = rddPR.map(x => (x._1,x._2._2));
 
-    while (Err > 0.1) {
+    while (Err > 0.5) {
       st = System.nanoTime
 
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
@@ -80,8 +80,10 @@ object PageRankSp {
     }
 
     //res.saveAsTextFile(outputPath);
-    val res = rddPR.map(x => (x._1, x._2._2));
-    res.sortBy({ case (page, pr) => (-pr, page) }, true, sc.defaultParallelism * 10).map(x => x._1 + "\t" + x._2).saveAsTextFile(outputPath);
+    //val res = rddPR.map(x => (x._1, x._2._2));
+    //res.sortBy({ case (page, pr) => (-pr, page) }, true, sc.defaultParallelism * 10).map(x => x._1 + "\t" + x._2).saveAsTextFile(outputPath);
+    val res = rddPR;
+    res.sortBy({ case (page, pr) => (-pr._2, page) }, true, sc.defaultParallelism * 10).map(x => x._1 + "\t" + x._2._1.mkString(" , ") + "|" + x._2._2).saveAsTextFile(outputPath);
 
     sc.stop
   }
