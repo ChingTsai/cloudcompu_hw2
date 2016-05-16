@@ -25,6 +25,7 @@ public class PageRankMr {
 		Configuration conf = new Configuration();
 		conf.setDouble("alpha", 0.85d);
 
+		st = System.nanoTime();
 		Job job1 = Job.getInstance(conf, "PageRankMr-Parse");
 		job1.setJarByClass(PageRankMr.class);
 
@@ -75,11 +76,14 @@ public class PageRankMr {
 		job2.waitForCompletion(true);
 
 		FileSystem fs = FileSystem.get(conf);
-
+		ed = System.nanoTime();
+		micros = (ed - st) / 1000000000d;
+		System.out.println("Parse :  " + String.valueOf(micros) + " seconds");
 		// loop
 		Job job3, job4, job5;
-
-		for (int iter = 0; iter < 5; iter++) {
+		double Err = 1.0;
+		int iter = 0;
+		while (Err > 0.01) {
 			st = System.nanoTime();
 			fs.delete(tmp_path, true);
 
