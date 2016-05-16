@@ -35,9 +35,10 @@ public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 					sb.append("&gt;");
 				pr = Double.parseDouble(par[1]);
 				prepr = par[0];
+				newlen = len;
 			} else {
 				outpr += Double.parseDouble(par[0]);
-				newlen++;
+				
 			}
 		}
 		sb.insert(0, newlen);
