@@ -163,6 +163,7 @@ public class PageRankMr {
 			fs.rename(tmp_path, pr_path);
 			ed = System.nanoTime();
 			micros = (ed - st) / 1000000000d;
+			Err = Double.parseDouble(err);
 			System.out.println("Iteration : " + iter + " err: " + err);
 			System.out.println("Compute :  " + String.valueOf(micros)
 					+ " seconds");
@@ -182,6 +183,9 @@ public class PageRankMr {
 		job6.setMapperClass(SortMapper.class);
 		job6.setReducerClass(SortReduce.class);
 		job6.setSortComparatorClass(CompuNextPrCompare.class);
+		FileInputFormat.addInputPath(job6, pr_path);
+		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
+		job6.waitForCompletion(true);
 
 		System.exit(1);
 
