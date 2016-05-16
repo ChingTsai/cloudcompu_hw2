@@ -18,7 +18,7 @@ public class CompuDanglMapper extends Mapper<Text, Text, Text, DoubleWritable> {
 		if (Integer.parseInt(par[2]) == 0) {
 			title.set("Sum");
 			pr.set(Double.parseDouble(par[0]));
-			context.write(key, pr);
+			context.write(title, pr);
 		}
 
 	}

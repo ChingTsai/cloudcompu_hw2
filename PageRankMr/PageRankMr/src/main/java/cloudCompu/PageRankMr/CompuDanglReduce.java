@@ -20,8 +20,8 @@ public class CompuDanglReduce extends Reducer<Text, DoubleWritable, Text, Text> 
 			tmppr += val.get();
 		}
 
-		//title.set("Sum");
+		title.set("Sum");
 		pr.set(String.valueOf(tmppr/N*alpha ));
-		context.write(key, pr);
+		context.write(title, pr);
 	}
 }
