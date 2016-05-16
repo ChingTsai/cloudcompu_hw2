@@ -83,7 +83,7 @@ public class PageRankMr {
 		Job job3, job4, job5;
 		double Err = 1.0;
 		int iter = 0;
-		while (Err > 0.001) {
+		while (Err > 0.1) {
 			st = System.nanoTime();
 			fs.delete(tmp_path, true);
 

@@ -47,7 +47,7 @@ object PageRankSp {
     val alpha = 0.85;
 
     var micros = (System.nanoTime - st) / 1000000000.0
-    System.out.println("Parse :  %1.5f seconds".format(micros))
+    System.out.println("Parse :  %1.5f seconds".format(micros));
 
     //val res = link.map(x => (x._1, ":" + x._2.mkString(",")));
     //res.map(x => x._2.count)
@@ -63,6 +63,8 @@ object PageRankSp {
       st = System.nanoTime
 
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
+      System.out.println("Dangl :  %1.5f ".format(dangpr));
+      
       var tmpPR = rddPR.map(row => {
 
         row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) }.+:(row._1, 1.0 / n * (1 - alpha) + dangpr);
