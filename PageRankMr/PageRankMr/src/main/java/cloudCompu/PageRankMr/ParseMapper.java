@@ -37,15 +37,15 @@ public class ParseMapper extends Mapper<LongWritable, Text, Text, Text> {
 		int clen;
 		while (matcher.find()) {
 			links = matcher.group().replaceAll("[\\[\\]]", "").split("[\\|#]");
-			if (links.length > 0) {
+			if (links.length > 0 ) {
 				clen = links[0].length();
 				if(clen==1){
 					link.set(links[0].toUpperCase());
-				}else{
+					context.write(link, title);
+				}else if(clen > 0){
 					link.set(links[0].substring(0, 1).toUpperCase().concat(links[0].substring(1)));
-				}
-				
-				context.write(link, title);
+					context.write(link, title);
+				}		
 			}
 		}
 		link.set("&gt;");
