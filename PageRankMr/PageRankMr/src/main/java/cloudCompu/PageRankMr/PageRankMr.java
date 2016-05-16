@@ -84,7 +84,7 @@ public class PageRankMr {
 		double Err = 1.0;
 		int iter = 0;
 		String dangl, err;
-		while (Err > 0.001) {
+		//while (Err > 0.001) {
 			st = System.nanoTime();
 			fs.delete(tmp_path, true);
 
@@ -104,7 +104,7 @@ public class PageRankMr {
 			FileInputFormat.addInputPath(job3, pr_path);
 			FileOutputFormat.setOutputPath(job3, tmp_path);
 			job3.waitForCompletion(true);
-
+/*
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					fs.open(new Path("Hw2/tmp/part-r-00000"))));
 
@@ -186,7 +186,7 @@ public class PageRankMr {
 		FileInputFormat.addInputPath(job6, pr_path);
 		FileOutputFormat.setOutputPath(job6, new Path(args[1]));
 		job6.waitForCompletion(true);
-
+*/
 		System.exit(1);
 
 	}
