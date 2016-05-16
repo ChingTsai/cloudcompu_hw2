@@ -71,7 +71,7 @@ public class PageRankMr {
 		job2.setReducerClass(PruneReduce.class);
 
 		FileInputFormat.addInputPath(job2, tmp_path);
-		FileOutputFormat.setOutputPath(job2, new Path("Hw2/pr1"));
+		FileOutputFormat.setOutputPath(job2, pr_path);
 
 		job2.waitForCompletion(true);
 
@@ -101,7 +101,7 @@ public class PageRankMr {
 			job3.setMapperClass(CompuDanglMapper.class);
 			job3.setReducerClass(CompuDanglReduce.class);
 
-			FileInputFormat.addInputPath(job3, new Path("Hw2/pr1"));
+			FileInputFormat.addInputPath(job3, pr_path);
 			FileOutputFormat.setOutputPath(job3, tmp_path);
 			job3.waitForCompletion(true);
 
