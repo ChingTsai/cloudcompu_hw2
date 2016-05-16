@@ -43,7 +43,7 @@ object PageRankSp {
     link.cache();
 
     
-    val n = link.count();
+    val n = lines.count();
     val alpha = 0.85;
 
     var micros = (System.nanoTime - st) / 1000000000.0
