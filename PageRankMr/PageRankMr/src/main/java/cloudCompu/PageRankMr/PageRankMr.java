@@ -83,7 +83,7 @@ public class PageRankMr {
 		Job job3, job4, job5;
 		double Err = 1.0;
 		int iter = 0;
-		while (Err > 0.01) {
+		while (Err > 0.1) {
 			st = System.nanoTime();
 			fs.delete(tmp_path, true);
 
@@ -111,7 +111,7 @@ public class PageRankMr {
 			StringTokenizer tokens = new StringTokenizer(br.readLine());
 			tokens.nextToken();
 			dangl = tokens.nextToken();
-			System.out.println(dangl);
+
 			conf.setDouble("dangl", Double.parseDouble(dangl));
 
 			fs.delete(tmp_path, true);
@@ -166,7 +166,22 @@ public class PageRankMr {
 			System.out.println("Iteration : " + iter + " err: " + err);
 			System.out.println("Compute :  " + String.valueOf(micros)
 					+ " seconds");
+			iter++;
 		}
+
+		Job job6 = Job.getInstance(conf, "PageRankMr-Sort");
+		job6.setJarByClass(PageRankMr.class);
+
+		job6.setMapOutputKeyClass(Text.class);
+		job6.setMapOutputValueClass(Text.class);
+		job6.setOutputKeyClass(Text.class);
+		job6.setOutputValueClass(Text.class);
+		// set the number of reducer
+		job6.setNumReduceTasks(50);
+		// setthe class of each stage in mapreduce
+		job6.setMapperClass(SortMapper.class);
+		job6.setReducerClass(SortReduce.class);
+		job6.setSortComparatorClass(CompuNextPrCompare.class);
 
 		System.exit(1);
 
