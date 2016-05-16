@@ -83,7 +83,7 @@ object PageRankSp {
     //val res = rddPR.map(x => (x._1, x._2._2));
     //res.sortBy({ case (page, pr) => (-pr, page) }, true, sc.defaultParallelism * 10).map(x => x._1 + "\t" + x._2).saveAsTextFile(outputPath);
     val res = rddPR;
-    res.sortBy({ case (page, pr) => (-pr._2, page) }, true, sc.defaultParallelism * 10).map(x => x._1 + "\t" + x._2._1.mkString(" , ") + "|" + x._2._2).saveAsTextFile(outputPath);
+    res.sortBy({ case (page, pr) => (-pr._2, page) }, true, sc.defaultParallelism * 10).map(x => x._1 + "\t" +x._2._1.length + " : "+ x._2._1.mkString(" , ") + "|" + x._2._2).saveAsTextFile(outputPath);
 
     sc.stop
   }
