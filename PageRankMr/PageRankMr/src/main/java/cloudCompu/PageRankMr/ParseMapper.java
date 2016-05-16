@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.WordUtils;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -38,7 +37,7 @@ public class ParseMapper extends Mapper<LongWritable, Text, Text, Text> {
 		while (matcher.find()) {
 			links = matcher.group().replaceAll("[\\[\\]]", "").split("[\\|#]");
 			if (links.length > 0) {
-				link.set(WordUtils.capitalize(links[0]));
+				link.set(cap(links[0]));
 				context.write(link, title);
 			}
 		}
@@ -56,5 +55,12 @@ public class ParseMapper extends Mapper<LongWritable, Text, Text, Text> {
 			getAllText(current, sb);
 		}
 
+	}
+
+	public String cap(String s) {
+
+		char[] tmp = s.toCharArray();
+		tmp[0] = Character.toUpperCase(tmp[0]);
+		return tmp.toString();
 	}
 }
