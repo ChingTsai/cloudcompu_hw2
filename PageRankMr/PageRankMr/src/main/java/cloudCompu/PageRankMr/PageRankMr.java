@@ -172,7 +172,7 @@ public class PageRankMr {
 
 		Job job6 = Job.getInstance(conf, "PageRankMr-Sort");
 		job6.setJarByClass(PageRankMr.class);
-
+		job6.setInputFormatClass(KeyValueTextInputFormat.class);
 		job6.setMapOutputKeyClass(Text.class);
 		job6.setMapOutputValueClass(Text.class);
 		job6.setOutputKeyClass(Text.class);
