@@ -178,7 +178,7 @@ public class PageRankMr {
 		job6.setOutputKeyClass(Text.class);
 		job6.setOutputValueClass(Text.class);
 		// set the number of reducer
-		job6.setNumReduceTasks(50);
+		job6.setNumReduceTasks(1);
 		// setthe class of each stage in mapreduce
 		job6.setMapperClass(SortMapper.class);
 		job6.setReducerClass(SortReduce.class);

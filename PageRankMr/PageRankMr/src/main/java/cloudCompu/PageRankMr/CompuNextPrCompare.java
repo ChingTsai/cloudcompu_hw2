@@ -17,7 +17,7 @@ public class CompuNextPrCompare extends WritableComparator {
 		s2 = t2.toString().split("&gt;");
 		Double err1 = Double.parseDouble(s1[1]);
 		Double err2 = Double.parseDouble(s2[1]);
-		if (err1 == err2) {
+		if (Double.compare(err1, err2) == 0) {
 			return s1[0].compareTo(s2[0]);
 		} else {
 			return err1.compareTo(err2);
