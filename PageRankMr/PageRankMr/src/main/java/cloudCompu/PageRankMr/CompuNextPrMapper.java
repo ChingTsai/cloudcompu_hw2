@@ -32,7 +32,7 @@ public class CompuNextPrMapper extends Mapper<Text, Text, Text, Text> {
 			StringBuilder sb = new StringBuilder("");
 			sb.append(par[0]);
 			sb.append(" ");
-			sb.append(String.valueOf(((1 - alpha) + alpha * dangl) / N));
+			sb.append(String.valueOf(1.0 / N * (1 - alpha) + dangl));
 			sb.append(" ");
 			sb.append(par[2]);
 			sb.append("&gt;");
@@ -44,7 +44,7 @@ public class CompuNextPrMapper extends Mapper<Text, Text, Text, Text> {
 			StringBuilder sb = new StringBuilder("");
 			sb.append(par[0]);
 			sb.append(" ");
-			sb.append(String.valueOf(((1 - alpha) + alpha * dangl) / N));
+			sb.append(String.valueOf(1.0 / N * (1 - alpha) + dangl));
 			sb.append(" ");
 			sb.append("0&gt;");
 			pr.set(sb.toString());

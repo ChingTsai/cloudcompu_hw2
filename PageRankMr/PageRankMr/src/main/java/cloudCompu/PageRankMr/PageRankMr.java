@@ -83,6 +83,7 @@ public class PageRankMr {
 		Job job3, job4, job5;
 		double Err = 1.0;
 		int iter = 0;
+		String dangl, err;
 		while (Err > 0.1) {
 			st = System.nanoTime();
 			fs.delete(tmp_path, true);
@@ -107,11 +108,10 @@ public class PageRankMr {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					fs.open(new Path("Hw2/tmp/part-r-00000"))));
 
-			String dangl;
 			StringTokenizer tokens = new StringTokenizer(br.readLine());
 			tokens.nextToken();
 			dangl = tokens.nextToken();
-
+			System.out.println(dangl);
 			conf.setDouble("dangl", Double.parseDouble(dangl));
 
 			fs.delete(tmp_path, true);
@@ -153,7 +153,7 @@ public class PageRankMr {
 
 			br = new BufferedReader(new InputStreamReader(fs.open(new Path(
 					"Hw2/err/part-r-00000"))));
-			String err;
+
 			tokens = new StringTokenizer(br.readLine());
 			tokens.nextToken();
 			err = tokens.nextToken();

@@ -59,11 +59,11 @@ object PageRankSp {
     rddPR.cache();
     //var tmpPR = rddPR.map(x => (x._1,x._2._2));
 
-    while (Err > 0.001) {
+    while (Err > 0.1) {
       st = System.nanoTime
 
       val dangpr = rddPR.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
-      System.out.println("Dangl :  %1.5f ".format(dangpr));
+      System.out.println("Dangl :  %1.10f ".format(dangpr));
       
       var tmpPR = rddPR.map(row => {
 

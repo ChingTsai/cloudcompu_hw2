@@ -14,7 +14,6 @@ public class CompuNextPrReduce extends Reducer<Text, Text, Text, Text> {
 	public void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 
-		Long N = context.getConfiguration().getLong("N", 1);
 		StringBuilder sb = new StringBuilder("");
 
 		double pr = 0.0d;
