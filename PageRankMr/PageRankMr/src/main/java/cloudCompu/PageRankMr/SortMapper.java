@@ -14,7 +14,7 @@ public class SortMapper extends Mapper<Text, Text, Text, Text> {
 		String[] detial = value.toString().split("&gt;");
 		String[] par = detial[0].split(" ");
 		title.set(key + "&gt;" + par[0]);
-		pr.set(value);
+		pr.set(" ");
 		context.write(title, pr);
 	}
 }

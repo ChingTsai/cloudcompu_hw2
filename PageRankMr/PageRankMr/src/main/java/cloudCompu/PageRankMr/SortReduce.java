@@ -11,14 +11,10 @@ public class SortReduce extends Reducer<Text, Text, Text, Text> {
 
 	public void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
+		String[] detial = key.toString().split("&gt;");
 
-		for (Text val : values) {
-
-			title.set(key.toString().split("&gt;")[0]);
-			pr.set(val);
-			context.write(title, pr);
-		}
-
+		title.set(detial[0]);
+		pr.set(detial[1]);
+		context.write(title, pr);
 	}
-
 }
