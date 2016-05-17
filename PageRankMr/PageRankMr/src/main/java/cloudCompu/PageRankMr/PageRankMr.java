@@ -34,19 +34,11 @@ public class PageRankMr {
 		job1.setOutputKeyClass(Text.class);
 		job1.setOutputValueClass(Text.class);
 		// set the number of reducer
-		job1.setNumReduceTasks(100);
+		job1.setNumReduceTasks(50);
 		// setthe class of each stage in mapreduce
 		job1.setMapperClass(ParseMapper.class);
 		job1.setReducerClass(ParseReduce.class);
 
-		// job.setMapperClass(xxx.class);
-		// job.setPartitionerClass(xxx.class);
-		// job.setSortComparatorClass(xxx.class);
-		// job.setReducerClass(xxx.class);
-
-		// set the output class of Mapper and Reducer
-
-		// add input/output path
 		FileInputFormat.addInputPath(job1, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job1, tmp_path);
 		job1.waitForCompletion(true);
@@ -65,7 +57,7 @@ public class PageRankMr {
 		job2.setMapOutputValueClass(Text.class);
 		job2.setOutputKeyClass(Text.class);
 		job2.setOutputValueClass(Text.class);
-		job2.setNumReduceTasks(100);
+		job2.setNumReduceTasks(50);
 		// setthe class of each stage in mapreduce
 		job2.setMapperClass(PruneMapper.class);
 		job2.setReducerClass(PruneReduce.class);
@@ -123,7 +115,7 @@ public class PageRankMr {
 			job4.setMapOutputValueClass(Text.class);
 			job4.setOutputKeyClass(Text.class);
 			job4.setOutputValueClass(Text.class);
-			job4.setNumReduceTasks(100);
+			job4.setNumReduceTasks(50);
 			// setthe class of each stage in mapreduce
 			job4.setMapperClass(CompuNextPrMapper.class);
 			job4.setReducerClass(CompuNextPrReduce.class);

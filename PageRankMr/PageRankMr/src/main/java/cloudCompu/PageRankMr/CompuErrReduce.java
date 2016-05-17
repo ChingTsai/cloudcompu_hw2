@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Reducer.Context;
 
 public class CompuErrReduce extends Reducer<Text, DoubleWritable, Text, Text> {
 	private Text title = new Text();
