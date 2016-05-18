@@ -18,7 +18,7 @@ object NewPageRank {
     var hdfs = FileSystem.get(hadoopConf)
     try { hdfs.delete(new Path(outputPath), true) } catch { case _: Throwable => {} }
 
-    val lines = sc.textFile(filePath, sc.defaultParallelism * 12)
+    val lines = sc.textFile(filePath, sc.defaultParallelism * 10)
 
     val regex = "\\[\\[(.+?)([\\|#]|\\]\\])".r;
 
@@ -57,7 +57,7 @@ object NewPageRank {
 
     while (Err > 0.001) {
       st = System.nanoTime
-      val con = link.join(rddPR);
+      val con = link.join(rddPR, sc.defaultParallelism * 10);
       val dangpr = con.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
       System.out.println("Dangl :  %1.10f ".format(dangpr));
 
@@ -68,7 +68,7 @@ object NewPageRank {
       }).flatMap(y => y).reduceByKey(_ + _);
 
       //var Er = tmpPR.subtractByKey(rddPR.map(x => (x._1, x._2._2))).partitionBy(partitioner)
-      Err = tmpPR.subtractByKey(rddPR).map(x => x._2.abs).reduce(_ + _)
+      Err = tmpPR.join(rddPR, sc.defaultParallelism * 10).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _)
 
       rddPR = tmpPR;
 
