@@ -2,6 +2,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
+import org.apache.spark.HashPartitioner
 
 object NewPageRank {
   def main(args: Array[String]) {
@@ -38,8 +39,9 @@ object NewPageRank {
         //
         .map(row => {
           row._2.toArray.filter(_ != "&gt").map(tp => (tp, row._1)).+:(row._1, "&gt");
-        }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }));
-
+        }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }))
+        link.partitionBy(new HashPartitioner(sc.defaultParallelism * 10));
+        
     link.cache();
 
     val n = lines.count();
@@ -69,7 +71,7 @@ object NewPageRank {
 
       //var Er = tmpPR.subtractByKey(rddPR.map(x => (x._1, x._2._2))).partitionBy(partitioner)
       Err = tmpPR.join(rddPR, sc.defaultParallelism * 10).map(x => (x._2._1 - x._2._2).abs).reduce(_ + _)
-
+      
       rddPR = tmpPR;
 
       micros = (System.nanoTime - st) / 1000000000.0
