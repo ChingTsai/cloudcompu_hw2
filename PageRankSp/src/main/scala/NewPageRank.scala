@@ -40,7 +40,7 @@ object NewPageRank {
         .map(row => {
           row._2.toArray.filter(_ != "&gt").map(tp => (tp, row._1)).+:(row._1, "&gt");
         }).flatMap(y => y).groupByKey(sc.defaultParallelism * 10).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }))
-        link.partitionBy(new HashPartitioner(sc.defaultParallelism * 10));
+      link =  link.partitionBy(new HashPartitioner(sc.defaultParallelism * 10));
         
     link.cache();
 
