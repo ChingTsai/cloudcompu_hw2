@@ -66,10 +66,10 @@ object NewPageRank {
         row._2._1.map { tp => (tp, row._2._2 / row._2._1.length * alpha) }
         //.+:(row._1, 1.0 / n * (1 - alpha) + dangpr);
 
-      }).flatMap(y => y);
+      }).flatMap(y => y).reduceByKey(_ + _).map { x => ( x._1,x. _2+ 1.0 / n * (1 - alpha) + dangpr)};
 
       //var Er = tmpPR.subtractByKey(rddPR.map(x => (x._1, x._2._2))).partitionBy(partitioner)
-      Err = tmpPR.subtractByKey(link.map(x => (x._1, 1.0 / n * (1 - alpha) + dangpr))).map(x => x._2.abs).reduce(_ + _)
+      Err = tmpPR.subtractByKey(rddPR).map(x => x._2.abs).reduce(_ + _)
 
       rddPR = tmpPR;
 
