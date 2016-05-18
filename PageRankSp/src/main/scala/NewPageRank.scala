@@ -59,7 +59,7 @@ object NewPageRank {
       st = System.nanoTime
       val con = link.join(rddPR);
       val dangpr = con.filter(_._2._1.length == 0).map(_._2._2).reduce(_ + _) / n * alpha;
-      //System.out.println("Dangl :  %1.10f ".format(dangpr));
+      System.out.println("Dangl :  %1.10f ".format(dangpr));
 
       var tmpPR = con.map(row => {
 
