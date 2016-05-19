@@ -42,7 +42,7 @@ object NewPageRank {
         }).flatMap(y => y).groupByKey(sc.defaultParallelism * 5).map(x => (x._1, x._2.toArray.filter { _ != "&gt" }))
       link =  link.partitionBy(new HashPartitioner(sc.defaultParallelism * 5));
         
-    link.cache();
+    link = link.cache();
 
     val n = lines.count();
     val alpha = 0.85;
@@ -55,7 +55,7 @@ object NewPageRank {
     var Err = 1.0;
     var iter = 0;
 
-    rddPR.cache();
+    rddPR = rddPR.cache();
 
     while (Err > 0.001) {
       st = System.nanoTime
