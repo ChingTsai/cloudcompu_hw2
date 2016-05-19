@@ -132,6 +132,23 @@
   <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/javax.servlet.jsp/jsp-api/jars/jsp-api-2.1.jar"/>
   <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/junit/junit/jars/junit-3.8.1.jar"/>
   <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/javax.servlet/servlet-api/jars/servlet-api-2.5.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.apache.spark/spark-mllib_2.10/jars/spark-mllib_2.10-1.1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.apache.spark/spark-streaming_2.10/jars/spark-streaming_2.10-1.1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.eclipse.jetty/jetty-server/jars/jetty-server-8.1.14.v20131031.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.eclipse.jetty/jetty-continuation/jars/jetty-continuation-8.1.14.v20131031.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.eclipse.jetty/jetty-http/jars/jetty-http-8.1.14.v20131031.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.eclipse.jetty/jetty-io/jars/jetty-io-8.1.14.v20131031.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.eclipse.jetty/jetty-util/jars/jetty-util-8.1.14.v20131031.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.jblas/jblas/jars/jblas-1.2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.scalanlp/breeze_2.10/jars/breeze_2.10-0.9.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.scalanlp/breeze-macros_2.10/jars/breeze-macros_2.10-0.3.1.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/com.github.fommil.netlib/core/jars/core-1.1.2.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/net.sourceforge.f2j/arpack_combined_all/jars/arpack_combined_all-0.1.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/net.sf.opencsv/opencsv/jars/opencsv-2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/com.github.rwl/jtransforms/jars/jtransforms-2.4.0.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.spire-math/spire_2.10/jars/spire_2.10-0.7.4.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.spire-math/spire-macros_2.10/jars/spire-macros_2.10-0.7.4.jar"/>
+  <classpathentry kind="lib" path="/Users/SISQUAKE/.ivy2/cache/org.scalamacros/quasiquotes_2.10/jars/quasiquotes_2.10-2.0.0.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="output" path="bin"/>
 </classpath>
